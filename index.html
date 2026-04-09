@@ -26,34 +26,34 @@
             transition: background-color var(--transition-speed) var(--transition-curve);
         }
 
-        /* 觸發區域 */
+        /* 觸發區域優化 */
         .trigger-zone {
             position: absolute;
             left: 0;
             width: 100%;
             height: 50vh;
-            z-index: 40;
+            z-index: 50;
         }
         .zone-top { top: 0; }
         .zone-bottom { bottom: 0; }
 
-        /* 背景大字 - 顏色加深 */
+        /* 背景大字 */
         .bg-title {
             position: absolute;
             font-family: 'Noto Serif TC', serif;
             font-size: 25vw;
             white-space: nowrap;
             z-index: 0;
-            transition: color var(--transition-speed), opacity var(--transition-speed);
+            transition: all var(--transition-speed) var(--transition-curve);
             pointer-events: none;
             user-select: none;
             letter-spacing: -0.05em;
             font-weight: 900;
-            opacity: 0.15; /* 加深透明度 */
+            opacity: 0.15;
             color: #0ea5e9;
         }
 
-        /* 立繪容器 - 核心：重疊與遮罩 */
+        /* 立繪容器 */
         .model-wrap {
             position: relative;
             height: 85vh;
@@ -73,61 +73,72 @@
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
+            transition: opacity var(--transition-speed) var(--transition-curve), 
+                        filter var(--transition-speed) var(--transition-curve),
+                        transform 0.5s ease;
         }
 
-        /* 惡魔立繪：初始完全隱藏，等待滑鼠揭開 */
-        .tachie-demon {
-            z-index: 20;
-            clip-path: circle(0% at 50% 50%); /* 預設揭開半徑為 0 */
-            transition: clip-path 0.1s linear; /* 讓跟隨感更平滑 */
-        }
+        /* 初始狀態：天使顯現，惡魔隱藏 */
+        .tachie-angel { opacity: 1; z-index: 22; }
+        .tachie-demon { opacity: 0; z-index: 21; filter: grayscale(1) brightness(0.5); }
+
+        /* 惡魔模式下的立繪狀態切換 */
+        .is-demon .tachie-angel { opacity: 0; }
+        .is-demon .tachie-demon { opacity: 1; filter: grayscale(0) brightness(1); }
 
         /* 玻璃卡片 */
         .glass-card {
             position: absolute;
-            width: 300px;
+            width: 320px;
             padding: 2.5rem 2rem;
             background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 2rem;
+            border-radius: 2.5rem;
             z-index: 100;
             transition: all var(--transition-speed) var(--transition-curve);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
 
-        /* 惡魔模式樣式 */
+        /* 模式切換樣式 */
         .stage.is-demon { background-color: var(--demon-bg); }
-        .stage.is-demon .bg-title { color: #ef4444; opacity: 0.12; }
+        .stage.is-demon .bg-title { color: #ef4444; opacity: 0.12; transform: scale(1.05) rotate(-2deg); }
         .stage.is-demon .glass-card { 
-            background: rgba(20, 0, 0, 0.6); 
+            background: rgba(30, 0, 0, 0.6); 
             border-color: rgba(239, 68, 68, 0.3); 
             color: #fecaca;
+            box-shadow: 0 15px 50px rgba(239, 68, 68, 0.2);
         }
 
         .card-left { left: 5%; }
         .card-right { right: 5%; }
         
         .nav-link { transition: all 0.3s ease; display: flex; align-items: center; gap: 1rem; }
-        .nav-link:hover { transform: translateX(10px); }
+        .nav-link:hover { transform: translateX(10px); filter: drop-shadow(0 0 8px currentColor); }
+
+        @media (max-width: 1024px) {
+            .glass-card { width: 260px; }
+        }
 
         @media (max-width: 768px) {
-            .glass-card { position: relative; width: 90%; margin: 10px 0; }
-            .stage { flex-direction: column; overflow-y: auto; justify-content: flex-start; padding-top: 2rem; }
-            .model-wrap { height: 50vh; order: -1; width: 100%; }
+            .glass-card { position: relative; width: 90%; margin: 10px 0; left: auto; right: auto; }
+            .stage { flex-direction: column; overflow-y: auto; justify-content: flex-start; padding: 2rem 0; }
+            .model-wrap { height: 50vh; order: -1; width: 100%; margin-bottom: 2rem; }
+            .bg-title { font-size: 40vw; top: 10%; }
         }
     </style>
 </head>
 <body>
 
     <div class="stage" id="mainStage">
-        <div class="trigger-zone zone-top" onmouseenter="updateState('angel')"></div>
-        <div class="trigger-zone zone-bottom" onmouseenter="updateState('demon')"></div>
+        <div class="trigger-zone zone-top" onmouseenter="updateState('angel')" ontouchstart="updateState('angel')"></div>
+        <div class="trigger-zone zone-bottom" onmouseenter="updateState('demon')" ontouchstart="updateState('demon')"></div>
 
         <div class="bg-title" id="bgTitle">天雪</div>
 
         <div class="glass-card card-left">
-            <h3 class="text-[11px] tracking-[0.3em] opacity-50 mb-1 font-bold">個人檔案</h3>
+            <h3 class="text-[11px] tracking-[0.3em] opacity-50 mb-1 font-bold">個人檔案 / PROFILE</h3>
             <h2 class="text-5xl font-bold mb-8 tracking-tighter transition-all" id="nameDisplay">天雪</h2>
             <div class="space-y-5 text-sm">
                 <div class="flex justify-between border-b border-current/10 pb-2">
@@ -138,19 +149,19 @@
                     <span class="opacity-50">種族</span>
                     <span id="raceVal" class="font-bold">天使</span>
                 </div>
-                <div class="pt-4 italic opacity-80" id="bioText">
+                <div class="pt-4 italic opacity-80 leading-relaxed" id="bioText">
                     「願這場冬雪，能洗淨世間所有的哀愁。」
                 </div>
             </div>
         </div>
 
         <div class="model-wrap" id="modelWrap">
-            <img src="Tachie.png" class="tachie tachie-angel" alt="天使">
-            <img src="Tachie_Demon.png" onerror="this.style.filter='hue-rotate(150deg) brightness(0.7)'" class="tachie tachie-demon" id="demonImg" alt="惡魔">
+            <img src="Tachie.png" class="tachie tachie-angel" alt="天使立繪">
+            <img src="Tachie_Demon.png" class="tachie tachie-demon" id="demonImg" alt="惡魔立繪" onerror="this.style.filter='hue-rotate(150deg) brightness(0.7)'">
         </div>
 
         <div class="glass-card card-right">
-            <h3 class="text-[11px] tracking-[0.3em] opacity-50 mb-1 font-bold">連結傳送門</h3>
+            <h3 class="text-[11px] tracking-[0.3em] opacity-50 mb-1 font-bold">社群傳送門 / LINKS</h3>
             <h2 class="text-5xl font-bold mb-8 tracking-tighter">追蹤</h2>
             <nav class="flex flex-col gap-5 font-bold">
                 <a href="https://www.youtube.com/@AmayukiShiina" target="_blank" class="nav-link" id="linkYt">
@@ -163,47 +174,55 @@
                     <span class="w-2 h-2 rounded-full bg-current"></span><span>TWITCH</span>
                 </a>
             </nav>
-            <div class="mt-14 text-[10px] opacity-30">© 2026 天雪シイナ 企劃</div>
+            <div class="mt-14 text-[10px] opacity-30">© 2026 天雪シイナ PROJECT</div>
         </div>
     </div>
 
     <script>
         const config = {
-            angel: { name: "天雪", birth: "09 / 21", race: "天使", bio: "「願這場冬雪，能洗淨世間所有的哀愁。」", colors: ["#0ea5e9", "#38bdf8", "#8b5cf6"] },
-            demon: { name: "夕納", birth: "09 / 16", race: "惡魔", bio: "「讓紅色的雪蓋過一切吧，靈魂什麼的...不需要喔。」", colors: ["#ef4444", "#f87171", "#fca5a5"] }
+            angel: { 
+                name: "天雪", 
+                birth: "09 / 21", 
+                race: "天使", 
+                bio: "「願這場冬雪，能洗淨世間所有的哀愁。」", 
+                colors: ["#0ea5e9", "#38bdf8", "#8b5cf6"] 
+            },
+            demon: { 
+                name: "夕納", 
+                birth: "09 / 16", 
+                race: "惡魔", 
+                bio: "「讓紅色的雪蓋過一切吧，靈魂什麼的...不需要喔。」", 
+                colors: ["#ef4444", "#f87171", "#fca5a5"] 
+            }
         };
 
         const stage = document.getElementById('mainStage');
-        const demonImg = document.getElementById('demonImg');
         const bgTitle = document.getElementById('bgTitle');
 
-        // 更新文字與狀態
         function updateState(mode) {
             const d = config[mode];
-            mode === 'demon' ? stage.classList.add('is-demon') : stage.classList.remove('is-demon');
+            
+            // 切換整體容器的 Class
+            if (mode === 'demon') {
+                stage.classList.add('is-demon');
+            } else {
+                stage.classList.remove('is-demon');
+            }
+
+            // 更新文字內容
             document.getElementById('nameDisplay').innerText = d.name;
             bgTitle.innerText = d.name;
             document.getElementById('birthVal').innerText = d.birth;
             document.getElementById('raceVal').innerText = d.race;
             document.getElementById('bioText').innerText = d.bio;
             
+            // 更新連結顏色
             document.getElementById('linkYt').style.color = d.colors[0];
             document.getElementById('linkX').style.color = d.colors[1];
             document.getElementById('linkTw').style.color = d.colors[2];
         }
 
-        // 滑鼠移動：掀開效果
-        window.addEventListener('mousemove', (e) => {
-            // 計算滑鼠相對於窗口的百分比位置
-            const x = (e.clientX / window.innerWidth) * 100;
-            const y = (e.clientY / window.innerHeight) * 100;
-            
-            // 揭開範圍半徑 (15% 圓形)
-            // 你可以把 15% 改大，例如 25% 會揭開更多
-            demonImg.style.clipPath = `circle(18% at ${x}% ${y}%)`;
-        });
-
-        // 初始狀態
+        // 初始執行一次
         updateState('angel');
     </script>
 </body>
