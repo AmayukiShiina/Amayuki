@@ -3,142 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>天雪シイナ | Amayuki Shiina Official Site</title>
+    <title>天雪シイナ | 鏡像現實</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@900&family=Noto+Sans+TC:wght@300;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Noto Sans TC', sans-serif; transition: background-color 0.5s; }
-        .mode-transition { transition: all 0.5s ease-in-out; }
-        
-        /* 天使模式 */
-        .angel-mode { background-color: #f0f9ff; --primary: #0ea5e9; --text: #334155; }
-        .angel-hero { background: linear-gradient(135deg, #0ea5e9 0%, #bae6fd 100%); }
-        
-        /* 惡魔模式 */
-        .demon-mode { background-color: #1a1a2e; --primary: #a78bfa; --text: #e2e8f0; }
-        .demon-hero { background: linear-gradient(135deg, #4c1d95 0%, #1e1b4b 100%); }
+        :root {
+            --angel-bg: #f0f9ff;
+            --demon-bg: #1a0505;
+            --transition-speed: 0.8s;
+            --transition-curve: cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-        .card { backdrop-filter: blur(8px); background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255,255,255,0.2); }
-        .demon-mode .card { background: rgba(0, 0, 0, 0.3); }
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background-color: var(--angel-bg); font-family: 'Noto Sans TC', sans-serif; }
+
+        .stage {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color var(--transition-speed) var(--transition-curve);
+        }
+
+        /* 觸發區域 */
+        .trigger-zone {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 50vh;
+            z-index: 40;
+        }
+        .zone-top { top: 0; }
+        .zone-bottom { bottom: 0; }
+
+        /* 背景大字 - 顏色加深 */
+        .bg-title {
+            position: absolute;
+            font-family: 'Noto Serif TC', serif;
+            font-size: 25vw;
+            white-space: nowrap;
+            z-index: 0;
+            transition: color var(--transition-speed), opacity var(--transition-speed);
+            pointer-events: none;
+            user-select: none;
+            letter-spacing: -0.05em;
+            font-weight: 900;
+            opacity: 0.15; /* 加深透明度 */
+            color: #0ea5e9;
+        }
+
+        /* 立繪容器 - 核心：重疊與遮罩 */
+        .model-wrap {
+            position: relative;
+            height: 85vh;
+            width: 60vw;
+            z-index: 10;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .tachie {
+            height: 100%;
+            width: 100%;
+            object-fit: contain;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* 惡魔立繪：初始完全隱藏，等待滑鼠揭開 */
+        .tachie-demon {
+            z-index: 20;
+            clip-path: circle(0% at 50% 50%); /* 預設揭開半徑為 0 */
+            transition: clip-path 0.1s linear; /* 讓跟隨感更平滑 */
+        }
+
+        /* 玻璃卡片 */
+        .glass-card {
+            position: absolute;
+            width: 300px;
+            padding: 2.5rem 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 2rem;
+            z-index: 100;
+            transition: all var(--transition-speed) var(--transition-curve);
+        }
+
+        /* 惡魔模式樣式 */
+        .stage.is-demon { background-color: var(--demon-bg); }
+        .stage.is-demon .bg-title { color: #ef4444; opacity: 0.12; }
+        .stage.is-demon .glass-card { 
+            background: rgba(20, 0, 0, 0.6); 
+            border-color: rgba(239, 68, 68, 0.3); 
+            color: #fecaca;
+        }
+
+        .card-left { left: 5%; }
+        .card-right { right: 5%; }
+        
+        .nav-link { transition: all 0.3s ease; display: flex; align-items: center; gap: 1rem; }
+        .nav-link:hover { transform: translateX(10px); }
+
+        @media (max-width: 768px) {
+            .glass-card { position: relative; width: 90%; margin: 10px 0; }
+            .stage { flex-direction: column; overflow-y: auto; justify-content: flex-start; padding-top: 2rem; }
+            .model-wrap { height: 50vh; order: -1; width: 100%; }
+        }
     </style>
 </head>
-<body id="mainBody" class="angel-mode text-slate-700">
+<body>
 
-    <div class="fixed bottom-10 right-10 z-[100]">
-        <button onclick="toggleMode()" id="modeBtn" class="bg-white shadow-2xl p-4 rounded-full hover:scale-110 transition active:scale-95 border-2 border-sky-400">
-            <span id="modeIcon" class="text-2xl">😈</span>
-        </button>
+    <div class="stage" id="mainStage">
+        <div class="trigger-zone zone-top" onmouseenter="updateState('angel')"></div>
+        <div class="trigger-zone zone-bottom" onmouseenter="updateState('demon')"></div>
+
+        <div class="bg-title" id="bgTitle">天雪</div>
+
+        <div class="glass-card card-left">
+            <h3 class="text-[11px] tracking-[0.3em] opacity-50 mb-1 font-bold">個人檔案</h3>
+            <h2 class="text-5xl font-bold mb-8 tracking-tighter transition-all" id="nameDisplay">天雪</h2>
+            <div class="space-y-5 text-sm">
+                <div class="flex justify-between border-b border-current/10 pb-2">
+                    <span class="opacity-50">紀念日</span>
+                    <span id="birthVal" class="font-bold">09 / 21</span>
+                </div>
+                <div class="flex justify-between border-b border-current/10 pb-2">
+                    <span class="opacity-50">種族</span>
+                    <span id="raceVal" class="font-bold">天使</span>
+                </div>
+                <div class="pt-4 italic opacity-80" id="bioText">
+                    「願這場冬雪，能洗淨世間所有的哀愁。」
+                </div>
+            </div>
+        </div>
+
+        <div class="model-wrap" id="modelWrap">
+            <img src="Tachie.png" class="tachie tachie-angel" alt="天使">
+            <img src="Tachie_Demon.png" onerror="this.style.filter='hue-rotate(150deg) brightness(0.7)'" class="tachie tachie-demon" id="demonImg" alt="惡魔">
+        </div>
+
+        <div class="glass-card card-right">
+            <h3 class="text-[11px] tracking-[0.3em] opacity-50 mb-1 font-bold">連結傳送門</h3>
+            <h2 class="text-5xl font-bold mb-8 tracking-tighter">追蹤</h2>
+            <nav class="flex flex-col gap-5 font-bold">
+                <a href="https://www.youtube.com/@AmayukiShiina" target="_blank" class="nav-link" id="linkYt">
+                    <span class="w-2 h-2 rounded-full bg-current"></span><span>YOUTUBE</span>
+                </a>
+                <a href="https://x.com/Shiina_Amayuk1" target="_blank" class="nav-link" id="linkX">
+                    <span class="w-2 h-2 rounded-full bg-current"></span><span>TWITTER (X)</span>
+                </a>
+                <a href="https://www.twitch.tv/amayukishiina" target="_blank" class="nav-link" id="linkTw">
+                    <span class="w-2 h-2 rounded-full bg-current"></span><span>TWITCH</span>
+                </a>
+            </nav>
+            <div class="mt-14 text-[10px] opacity-30">© 2026 天雪シイナ 企劃</div>
+        </div>
     </div>
 
-    <nav class="p-4 bg-white/60 sticky top-0 z-50 backdrop-blur-md border-b border-sky-100">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 id="navTitle" class="text-2xl font-bold text-sky-600">Amayuki Ch.</h1>
-            <div class="space-x-4 md:space-x-6 font-medium">
-                <a href="#about" class="hover:text-sky-400 transition">關於天雪</a>
-                <a href="#lore" class="hover:text-sky-400 transition">世界觀</a>
-                <a href="#links" class="hover:text-sky-400 transition">連結</a>
-            </div>
-        </div>
-    </nav>
-
-    <section id="hero" class="angel-hero min-h-[90vh] flex items-center justify-center py-20 px-4 mode-transition">
-        <div class="container mx-auto flex flex-col md:flex-row items-center">
-            <div class="md:w-1/2 flex justify-center mb-10 md:mb-0">
-                <img id="tachie" src="Tachie.png" alt="天雪シイナ立繪" class="rounded-2xl shadow-2xl max-w-full h-auto border-4 border-white transition-opacity duration-500">
-            </div>
-            <div class="md:w-1/2 text-white text-center md:text-left">
-                <h2 id="mainName" class="text-6xl font-extrabold mb-4 drop-shadow-md">天雪シイナ</h2>
-                <p id="slogan" class="text-2xl mb-8 font-light tracking-widest text-sky-50">「在飄落的冬雪中，與你相遇。」</p>
-                <div class="flex flex-wrap justify-center md:justify-start gap-4">
-                    <a href="https://www.youtube.com/@AmayukiShiina" class="bg-white text-sky-600 px-10 py-3 rounded-full font-bold shadow-lg hover:bg-sky-50 transition transform hover:scale-105">進入頻道</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="about" class="py-24 px-4 transition-colors duration-500">
-        <div class="container mx-auto max-w-5xl">
-            <div class="grid md:grid-cols-2 gap-12">
-                <div class="card p-8 rounded-3xl shadow-xl border-sky-100 bg-white/80">
-                    <h3 class="text-3xl font-bold text-sky-600 mb-6">Profile / 自己紹介</h3>
-                    <ul class="space-y-4 text-lg">
-                        <li class="flex justify-between border-b pb-2"><span>生日</span> <span class="font-bold">9月21日</span></li>
-                        <li class="flex justify-between border-b pb-2"><span>身高</span> <span class="font-bold">158cm</span></li>
-                        <li class="flex justify-between border-b pb-2"><span>喜歡的食物</span> <span class="font-bold">草莓冰淇淋、靈魂(?)</span></li>
-                        <li class="flex justify-between border-b pb-2"><span>興趣</span> <span class="font-bold">歌唱、恐怖遊戲、深夜漫談</span></li>
-                    </ul>
-                </div>
-                <div id="lore" class="flex flex-col justify-center">
-                    <h3 class="text-3xl font-bold text-sky-600 mb-6">Story / 設定</h3>
-                    <p id="loreText" class="text-lg leading-loose">
-                        原本是掌管冬雪的天使，卻在一次意外中染上了深淵的氣息。
-                        現在以雙重身份生活在人類世界。
-                        當心情愉悅時，會展現出溫暖的天使模樣；
-                        但當黑夜降臨或是情緒波動時，體內的惡魔因子就會覺醒...
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="py-16 bg-sky-100/30 transition-colors duration-500">
-        <div class="container mx-auto px-4 max-w-4xl text-center">
-            <h3 class="text-2xl font-bold mb-8">直播注意事項 (Guidelines)</h3>
-            <div class="grid md:grid-cols-3 gap-4 text-sm">
-                <div class="p-4 bg-white rounded-xl shadow-sm">❌ 禁止洗版或引戰言論</div>
-                <div class="p-4 bg-white rounded-xl shadow-sm">❌ 請勿提及其他與直播無關的話題</div>
-                <div class="p-4 bg-white rounded-xl shadow-sm">✅ 歡迎使用二創 Tag 分享作品</div>
-            </div>
-        </div>
-    </section>
-
-    <section id="links" class="py-24 text-center">
-        <h3 class="text-4xl font-bold text-sky-600 mb-12">Connect with Me</h3>
-        <div class="flex flex-wrap justify-center gap-10">
-            <a href="https://www.youtube.com/@AmayukiShiina" target="_blank" class="group">
-                <div class="w-20 h-20 bg-sky-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-red-500 group-hover:text-white transition-all">YT</div>
-                <p class="font-bold">YouTube</p>
-            </a>
-            <a href="https://x.com/Shiina_Amayuk1" target="_blank" class="group">
-                <div class="w-20 h-20 bg-sky-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-black group-hover:text-white transition-all">X</div>
-                <p class="font-bold">Twitter</p>
-            </a>
-            <a href="https://www.twitch.tv/amayukishiina" target="_blank" class="group">
-                <div class="w-20 h-20 bg-sky-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-purple-600 group-hover:text-white transition-all">Twitch</div>
-                <p class="font-bold">Twitch</p>
-            </a>
-        </div>
-        <p class="mt-20 text-gray-400">© 2026 Amayuki Shiina. All Rights Reserved.</p>
-    </section>
-
     <script>
-        let currentMode = 'angel';
-        function toggleMode() {
-            const body = document.getElementById('mainBody');
-            const hero = document.getElementById('hero');
-            const icon = document.getElementById('modeIcon');
-            const slogan = document.getElementById('slogan');
-            const lore = document.getElementById('loreText');
-            const tachie = document.getElementById('tachie');
+        const config = {
+            angel: { name: "天雪", birth: "09 / 21", race: "天使", bio: "「願這場冬雪，能洗淨世間所有的哀愁。」", colors: ["#0ea5e9", "#38bdf8", "#8b5cf6"] },
+            demon: { name: "夕納", birth: "09 / 16", race: "惡魔", bio: "「讓紅色的雪蓋過一切吧，靈魂什麼的...不需要喔。」", colors: ["#ef4444", "#f87171", "#fca5a5"] }
+        };
 
-            if (currentMode === 'angel') {
-                body.className = 'demon-mode text-slate-200';
-                hero.className = 'demon-hero min-h-[90vh] flex items-center justify-center py-20 px-4 mode-transition';
-                icon.innerText = '👼';
-                slogan.innerText = '「墮入深淵吧，這場雪...是紫色的。」';
-                lore.innerText = '惡魔形態的天雪シイナ，雖然看起來很危險，但其實只是變得比較誠實（毒舌）而已。在此形態下，歌聲會帶有誘惑與毀滅的力量。';
-                // tachie.src = "Tachie_Demon.png"; // 之後有惡魔圖了可以換掉這行
-                currentMode = 'demon';
-            } else {
-                body.className = 'angel-mode text-slate-700';
-                hero.className = 'angel-hero min-h-[90vh] flex items-center justify-center py-20 px-4 mode-transition';
-                icon.innerText = '😈';
-                slogan.innerText = '「在飄落的冬雪中，與你相遇。」';
-                lore.innerText = '原本是掌管冬雪的天使，卻在一次意外中染上了深淵的氣息。現在以雙重身份生活在人類世界...';
-                // tachie.src = "Tachie.png";
-                currentMode = 'angel';
-            }
+        const stage = document.getElementById('mainStage');
+        const demonImg = document.getElementById('demonImg');
+        const bgTitle = document.getElementById('bgTitle');
+
+        // 更新文字與狀態
+        function updateState(mode) {
+            const d = config[mode];
+            mode === 'demon' ? stage.classList.add('is-demon') : stage.classList.remove('is-demon');
+            document.getElementById('nameDisplay').innerText = d.name;
+            bgTitle.innerText = d.name;
+            document.getElementById('birthVal').innerText = d.birth;
+            document.getElementById('raceVal').innerText = d.race;
+            document.getElementById('bioText').innerText = d.bio;
+            
+            document.getElementById('linkYt').style.color = d.colors[0];
+            document.getElementById('linkX').style.color = d.colors[1];
+            document.getElementById('linkTw').style.color = d.colors[2];
         }
+
+        // 滑鼠移動：掀開效果
+        window.addEventListener('mousemove', (e) => {
+            // 計算滑鼠相對於窗口的百分比位置
+            const x = (e.clientX / window.innerWidth) * 100;
+            const y = (e.clientY / window.innerHeight) * 100;
+            
+            // 揭開範圍半徑 (15% 圓形)
+            // 你可以把 15% 改大，例如 25% 會揭開更多
+            demonImg.style.clipPath = `circle(18% at ${x}% ${y}%)`;
+        });
+
+        // 初始狀態
+        updateState('angel');
     </script>
 </body>
 </html>
