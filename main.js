@@ -1,3 +1,6 @@
+const cubism4Model =
+  "/Model/Amayuki1/amayuki.model3.json";
+
 const config = {
     angel: { 
         name: "天雪", 
@@ -66,6 +69,14 @@ function updateMode(mode) {
         'aboutContent': data.aboutDesc
     };
 
+    if (window.myModel) {
+        if (mode === 'demon') {
+            window.myModel.expression("Wings");
+        } else {
+            window.myModel.expression("Rings");
+        }
+    }
+
     Object.entries(updateMap).forEach(([id, value]) => {
         const el = document.getElementById(id);
         if (el) {
@@ -102,8 +113,71 @@ function togglePortal(open) {
         setTimeout(() => { portal.style.display = 'none'; }, 500);
     }
     }
+async function PixiLive() {
+    const canvasElement = document.getElementById("canvas");
+    const app = new PIXI.Application({
+        view: document.getElementById("canvas"),
+        autoStart: true,
+        resizeTo: window,
+        transparent: true, // 建議開啟透明，以免遮住背景文字
+        backgroundAlpha: 0,
+        antialias: true
+    });
+
+    try {
+        const model4 = await PIXI.live2d.Live2DModel.from(cubism4Model);
+        window.myModel = model4;
+        app.stage.addChild(model4);
+        
+        model4.expression("Rings");
+        model4.autoInteract = false;
+        
+        // 基礎設定
+        model4.scale.set(0.25);
+        model4.anchor.set(0.5, 0.5);
+        const updatePosition = () => {
+            model4.x = window.innerWidth * 0.5;
+            model4.y = window.innerHeight * 0.5;
+        };
+        updatePosition();
+        window.addEventListener('resize', updatePosition);
+        /*/ --- 強化版滑鼠監聽 ---
+        const handlePointerMove = (e) => {
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+
+            // 計算距離中心點的位移
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            const distX = mouseX - centerX;
+            const distY = mouseY - centerY;
+            const distance = Math.sqrt(distX * distX + distY * distY);
+
+            // 判斷半徑，建議設大一點點（例如 250）觀察效果
+            const deadZoneRadius = 250;
+
+            if (distance < deadZoneRadius) {
+                // 【關鍵 1】在中間時，強制關閉自動互動
+                model4.autoInteract = false;
+            } else {
+                // 離開中間，恢復自動追隨
+                model4.autoInteract = true;
+            }
+        };
+
+        window.addEventListener('mousemove', handlePointerMove);
+        model4.autoInteract = false; 
+        model4.focus(window.innerWidth / 2, window.innerHeight / 2);*/
+
+    } catch (error) {
+        console.error("Live2D 載入錯誤:", error);
+    }
+}
+
+
 
     // 頁面初始化
     document.addEventListener('DOMContentLoaded', () => {
-    updateMode('angel');
+        updateMode('angel');
+        PixiLive();
     });

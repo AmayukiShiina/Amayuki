@@ -55,16 +55,18 @@ body, html {
 }
 .is-demon .bg-title { opacity: 0.1; }
 
-/* 立繪樣式 */
 .model-wrap {
-  position: absolute;
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  pointer-events: none;
-  z-index: 5;
+    position: fixed;
+    inset: 0;
+    z-index: 10; /* 調低一點，確保在 UI 卡片 (120) 之下 */
+    pointer-events: none; /* 關鍵：讓點擊穿透到下面的 UI */
+}
+
+#canvas {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 60;
 }
 
 .tachie {

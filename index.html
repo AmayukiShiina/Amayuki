@@ -7,6 +7,11 @@
             <script src="https://cdn.tailwindcss.com"></script>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
             <link rel="stylesheet" href="style.css">
+
+            <script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/gh/dylanNew/live2d/webgl/Live2D/lib/live2d.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/pixi.js@6.5.2/dist/browser/pixi.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display/dist/index.min.js"></script>
         </head>
 
         <body>
@@ -64,9 +69,8 @@
         </div>
 
         <div class="model-wrap">
-            <img src="image/Tachie.png" class="tachie tachie-angel" alt="Angel">
-            <img src="image/Tachie_Demon.png" class="tachie tachie-demon" alt="Demon">
-            </div>
+            <canvas id=canvas></canvas>
+        </div>
 
         <div class="social-container">
             <h3 class="social-header" id="connectTitle">數據連接</h3>

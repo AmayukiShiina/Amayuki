@@ -3,7 +3,13 @@
 	"Parameters": [
 		{
 			"Id": "Paramshock",
-			"Value": 1,
+			"Value": -1,
+			"Blend": "Add"
+		},
+
+		{
+			"Id": "Param_sw",
+			"Value": -1,
 			"Blend": "Add"
 		}
 	]

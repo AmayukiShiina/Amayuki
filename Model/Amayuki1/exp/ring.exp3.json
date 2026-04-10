@@ -5,6 +5,12 @@
 			"Id": "Param_sw",
 			"Value": 1,
 			"Blend": "Add"
+		},
+
+		{
+			"Id": "Paramshock",
+			"Value": 1,
+			"Blend": "Add"
 		}
 	]
 }

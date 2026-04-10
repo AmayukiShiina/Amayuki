@@ -6,7 +6,11 @@
 			"Amayuki.8192/texture_00.png"
 		],
 		"Physics": "Amayuki.physics3.json",
-		"DisplayInfo": "Amayuki.cdi3.json"
+		"DisplayInfo": "Amayuki.cdi3.json",
+		"Expressions": [
+		{ "Name": "Wings", "File": "exp/wings.exp3.json" },
+		{ "Name": "Rings", "File": "exp/ring.exp3.json" }
+		]
 	},
 	"Groups": [
 		{
