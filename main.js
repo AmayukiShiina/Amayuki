@@ -1,5 +1,5 @@
 const cubism4Model =
-  "Model/Amayuki1/amayuki.model3.json";
+  "./Model/Amayuki1/amayuki.model3.json";
 
 const config = {
     angel: { 
