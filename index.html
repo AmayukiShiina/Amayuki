@@ -1,126 +1,133 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
+    <!DOCTYPE html>
+    <html lang="zh-TW">
+    <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>天雪夕納 | Official Website</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    </head>
+    <body>
+
     <div class="stage" id="mainStage">
-        <div class="absolute top-0 w-full h-[15vh] z-[100]" onmouseenter="updateMode('angel')"></div>
-        <div class="absolute bottom-0 w-full h-[15vh] z-[100]" onmouseenter="updateMode('demon')"></div>
+    <div class="hover-zone zone-top" onmouseenter="updateMode('angel')"></div>
+    <div class="hover-zone zone-bottom" onmouseenter="updateMode('demon')"></div>
 
-        <div class="bg-title" id="bgTitle">天雪</div>
+    <div class="bg-title" id="bgTitle">天雪</div>
 
-        <div class="menu-trigger" id="menuBtn" onclick="togglePortal(true)">
-            <i class="fa-solid fa-bars-staggered text-2xl"></i>
+    <div class="menu-trigger" id="menuBtn" onclick="togglePortal(true)">
+        <i class="fa-solid fa-bars-staggered text-2xl"></i>
+    </div>
+
+    <div id="nav-portal" class="portal">
+        <div class="close-portal" onclick="togglePortal(false)">
+        <i class="fa-solid fa-xmark"></i>
         </div>
+        <nav class="nav-links">
+        <a href="index.html" class="nav-item">
+            <span class="nav-label">GATEWAY</span>主頁
+        </a>
+        <a href="rp.html" class="nav-item">
+            <span class="nav-label">RP ARCHIVES</span>RP歷史記錄
+        </a>
+        <a href="#" class="nav-item disabled">
+            <span class="nav-label">GALLERY</span>記憶碎片
+        </a>
+        </nav>
+    </div>
 
-        <div id="nav-portal">
-            <div class="close-portal" onclick="togglePortal(false)">
-                <i class="fa-solid fa-xmark"></i>
+    <div class="info-card-container">
+        <div class="info-card-inner" id="mainCard">
+        <div class="card-face card-front">
+            <h3 class="card-subtitle">IDENTITY / 身份證</h3>
+            <h2 class="card-title" id="nameDisplay">天雪</h2>
+            <p class="card-bio" id="bioText"></p>
+            <div class="mt-auto space-y-5">
+            <div class="info-row">
+                <span class="info-label">生日</span>
+                <span class="info-value" id="birthVal"></span>
             </div>
-            <a href="index.html" class="nav-item">
-                <span class="nav-label">GATEWAY</span>主頁
-            </a>
-            <a href="rp.html" class="nav-item">
-                <span class="nav-label">RP ARCHIVES</span>RP歷史記錄
-            </a>
-            <a href="#" class="nav-item opacity-20 cursor-not-allowed">
-                <span class="nav-label">GALLERY</span>記憶碎片
-            </a>
-        </div>
-
-        <div class="absolute left-[6%] z-[120] info-card-container">
-            <div class="info-card-inner" id="mainCard">
-                <div class="card-face card-front">
-                    <h3 class="card-subtitle">IDENTITY / 身份證</h3>
-                    <h2 class="card-title" id="nameDisplay">天雪</h2>
-                    <p class="card-bio" id="bioText"></p>
-                    <div class="mt-auto space-y-5">
-                        <div class="info-row">
-                            <span class="info-label">生日</span><span class="font-black" id="birthVal"></span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">種族</span><span class="font-black" id="raceVal"></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-face card-back">
-                    <h3 class="card-subtitle uppercase">Biography</h3>
-                    <h2 class="text-4xl font-black mb-6" id="aboutTitle"></h2>
-                    <div class="text-sm space-y-5 leading-relaxed font-medium" id="aboutContent"></div>
-                </div>
+            <div class="info-row">
+                <span class="info-label">種族</span>
+                <span class="info-value" id="raceVal"></span>
+            </div>
             </div>
         </div>
-
-        <div class="model-wrap">
-            <img src="image/Tachie.png" class="tachie tachie-angel" alt="Angel">
-            <img src="image/Tachie_Demon.png" class="tachie tachie-demon" alt="Demon">
+        <div class="card-face card-back">
+            <h3 class="card-subtitle">BIOGRAPHY</h3>
+            <h2 class="text-4xl font-black mb-6" id="aboutTitle"></h2>
+            <div class="text-sm space-y-5 leading-relaxed font-medium" id="aboutContent"></div>
         </div>
-
-        <div class="social-container">
-            <h3 class="social-header" id="connectTitle">數據連接</h3>
-            
-            <a href="#" class="social-link group" id="linkYt">
-                <div class="flex items-center gap-4">
-                    <i class="fab fa-youtube text-2xl opacity-70 group-hover:opacity-100"></i>
-                    <div>
-                        <span class="link-category">YouTube</span>
-                        <span class="link-text">直播現場</span>
-                    </div>
-                </div>
-                <span class="link-arrow">↗</span>
-            </a>
-
-            <a href="#" class="social-link group" id="linkX">
-                <div class="flex items-center gap-4">
-                    <i class="fab fa-x-twitter text-2xl opacity-70 group-hover:opacity-100"></i>
-                    <div>
-                        <span class="link-category">Twitter / X</span>
-                        <span class="link-text">日常發布</span>
-                    </div>
-                </div>
-                <span class="link-arrow">↗</span>
-            </a>
-
-            <a href="#" class="social-link group" id="linkTw">
-                <div class="flex items-center gap-4">
-                    <i class="fab fa-twitch text-2xl opacity-70 group-hover:opacity-100"></i>
-                    <div>
-                        <span class="link-category">Twitch</span>
-                        <span class="link-text">即時互動</span>
-                    </div>
-                </div>
-                <span class="link-arrow">↗</span>
-            </a>
-
-            <a href="#" class="social-link group" id="linkIg">
-                <div class="flex items-center gap-4">
-                    <i class="fab fa-instagram text-2xl opacity-70 group-hover:opacity-100"></i>
-                    <div>
-                        <span class="link-category">Instagram</span>
-                        <span class="link-text">生活碎片</span>
-                    </div>
-                </div>
-                <span class="link-arrow">↗</span>
-            </a>
-
-            <a href="#" class="social-link group" id="linkTk">
-                <div class="flex items-center gap-4">
-                    <i class="fab fa-tiktok text-2xl opacity-70 group-hover:opacity-100"></i>
-                    <div>
-                        <span class="link-category">TikTok</span>
-                        <span class="link-text">短影剪輯</span>
-                    </div>
-                </div>
-                <span class="link-arrow">↗</span>
-            </a>
         </div>
     </div>
+
+    <div class="model-wrap">
+        <img src="image/Tachie.png" class="tachie tachie-angel" alt="Angel">
+        <img src="image/Tachie_Demon.png" class="tachie tachie-demon" alt="Demon">
+        </div>
+
+    <div class="social-container">
+        <h3 class="social-header" id="connectTitle">數據連接</h3>
+        
+        <a href="#" class="social-link group" id="linkYt">
+        <div class="flex items-center gap-4">
+            <i class="fab fa-youtube text-2xl social-icon"></i>
+            <div>
+            <span class="link-category">YouTube</span>
+            <span class="link-text">直播現場</span>
+            </div>
+        </div>
+        <span class="link-arrow">↗</span>
+        </a>
+
+        <a href="#" class="social-link group" id="linkX">
+        <div class="flex items-center gap-4">
+            <i class="fab fa-x-twitter text-2xl social-icon"></i>
+            <div>
+            <span class="link-category">Twitter / X</span>
+            <span class="link-text">日常發布</span>
+            </div>
+        </div>
+        <span class="link-arrow">↗</span>
+        </a>
+
+        <a href="#" class="social-link group" id="linkTw">
+        <div class="flex items-center gap-4">
+            <i class="fab fa-twitch text-2xl social-icon"></i>
+            <div>
+            <span class="link-category">Twitch</span>
+            <span class="link-text">即時互動</span>
+            </div>
+        </div>
+        <span class="link-arrow">↗</span>
+        </a>
+
+        <a href="#" class="social-link group" id="linkIg">
+        <div class="flex items-center gap-4">
+            <i class="fab fa-instagram text-2xl social-icon"></i>
+            <div>
+            <span class="link-category">Instagram</span>
+            <span class="link-text">生活碎片</span>
+            </div>
+        </div>
+        <span class="link-arrow">↗</span>
+        </a>
+
+        <a href="#" class="social-link group" id="linkTk">
+        <div class="flex items-center gap-4">
+            <i class="fab fa-tiktok text-2xl social-icon"></i>
+            <div>
+            <span class="link-category">TikTok</span>
+            <span class="link-text">短影剪輯</span>
+            </div>
+        </div>
+        <span class="link-arrow">↗</span>
+        </a>
+        
+        </div>
+    </div>
+
     <script src="main.js"></script>
-</body>
-</html>
+    </body>
+    </html>
