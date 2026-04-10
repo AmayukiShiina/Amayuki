@@ -1,6 +1,3 @@
-/* =========================================
-   1. 核心變數設定 (Variables)
-   ========================================= */
 :root {
     --angel-bg: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
     --angel-theme: #0369a1;
@@ -10,311 +7,128 @@
     --transition-curve: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* =========================================
-   2. 基礎全域樣式 (Global Styles)
-   ========================================= */
-body, 
-html { 
-    margin: 0; 
-    padding: 0; 
-    height: 100%; 
-    overflow: hidden; 
-    font-family: 'Noto Sans TC', sans-serif; 
+body, html { 
+    margin: 0; padding: 0; height: 100%; 
+    overflow: hidden; font-family: 'Noto Sans TC', sans-serif; 
 }
 
-/* 基礎背景舞台 */
+/* 舞台背景 */
 .stage {
-    position: relative; 
-    width: 100%; 
-    height: 100vh; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
+    position: relative; width: 100%; height: 100vh; 
+    display: flex; align-items: center; justify-content: center;
     background: var(--angel-bg); 
     transition: background var(--transition-speed) var(--transition-curve);
 }
+.is-demon { background: var(--demon-bg); }
 
 /* 背景裝飾大字 */
 .bg-title {
-    position: absolute; 
-    font-family: 'Noto Serif TC', serif; 
-    font-size: 25vw; 
-    z-index: 0;
-    transition: all var(--transition-speed); 
-    pointer-events: none;
-    opacity: 0.6; 
-    color: #ffffff; 
-    font-weight: 900; 
-    filter: none;
-    text-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    position: absolute; font-family: 'Noto Serif TC', serif; font-size: 25vw; 
+    z-index: 0; transition: all var(--transition-speed); 
+    pointer-events: none; opacity: 0.6; color: #ffffff; 
+    font-weight: 900; text-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+.is-demon .bg-title { opacity: 0.1; }
+
+/* 立繪樣式 */
+/* 找到 .model-wrap，確保它允許內部 Canvas 調整 */
+.model-wrap {
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    pointer-events: none; /* 讓滑鼠點擊可以穿透到後方卡片，但 Live2D 內部會處理跟隨 */
 }
 
-/* =========================================
-   3. 立繪顯示控制 (Model / Tachie)
-   ========================================= */
-.model-wrap {
-    position: absolute; 
-    height: 95vh; 
-    width: 100%; 
-    z-index: 5;
-    display: flex; 
-    justify-content: center; 
-    align-items: flex-end; 
-    pointer-events: none;
+#live2d-canvas {
+    height: 95vh;
+    width: auto;
+    /* 這裡可以根據模型大小微調偏移 */
+    transform: translateY(20px); 
+    pointer-events: auto; /* 讓 Canvas 接收滑鼠事件來跟隨 */
 }
 
 .tachie {
-    height: 100%; 
-    object-fit: contain; 
-    position: absolute; 
-    bottom: 0;
+    height: 100%; object-fit: contain; position: absolute; bottom: 0;
     transition: all var(--transition-speed) var(--transition-curve);
 }
+.tachie-angel { opacity: 1; filter: drop-shadow(0 0 20px rgba(255,255,255,0.8)); }
+.tachie-demon { opacity: 0; transform: translateY(20px); filter: drop-shadow(0 0 30px rgba(239,68,68,0.5)); }
 
-/* 天使模式立繪樣式 */
-.tachie-angel { 
-    opacity: 1; 
-    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.8)) 
-            drop-shadow(0 0 45px rgba(56, 189, 248, 0.3)); 
-}
+.is-demon .tachie-angel { opacity: 0; transform: translateY(-20px); }
+.is-demon .tachie-demon { opacity: 1; transform: translateY(0); }
 
-/* 惡魔模式立繪樣式 (預設隱藏) */
-.tachie-demon { 
-    opacity: 0; 
-    transform: translateY(20px); 
-    filter: drop-shadow(0 0 30px rgba(239, 68, 68, 0.5)); 
-}
-
-/* =========================================
-   4. 惡魔模式狀態切換 (Mode Switch)
-   ========================================= */
-.is-demon { 
-    background: var(--demon-bg); 
-}
-
-.is-demon .bg-title { 
-    opacity: 0.1; 
-}
-
-.is-demon .tachie-angel { 
-    opacity: 0; 
-    transform: translateY(-20px); 
-}
-
-.is-demon .tachie-demon { 
-    opacity: 1; 
-    transform: translateY(0); 
-}
-
-/* =========================================
-   5. 資訊卡片互動 (Info Card & Flip Effect)
-   ========================================= */
-.info-card-container { 
-    perspective: 1500px; 
-    cursor: pointer; 
-}
-
-.info-card-container:hover .info-card-inner {
-    transform: rotateY(180deg);
-}
-
+/* 身份卡片 */
+.info-card-container { perspective: 1500px; cursor: pointer; }
+.info-card-container:hover .info-card-inner { transform: rotateY(180deg); }
 .info-card-inner {
-    position: relative; 
-    width: 360px; 
-    height: 460px;
-    transition: transform 0.8s var(--transition-curve); 
-    transform-style: preserve-3d;
+    position: relative; width: 360px; height: 460px;
+    transition: transform 0.8s var(--transition-curve); transform-style: preserve-3d;
 }
-
 .card-face {
-    position: absolute; 
-    width: 100%; 
-    height: 100%; 
-    backface-visibility: hidden;
-    border-radius: 2.5rem; 
-    padding: 2.5rem; 
-    display: flex; 
-    flex-direction: column;
-    background: rgba(255, 255, 255, 0.3); 
-    backdrop-filter: blur(30px);
-    border: 1px solid rgba(255, 255, 255, 0.5); 
-    color: var(--angel-theme);
+    position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+    border-radius: 2.5rem; padding: 2.5rem; display: flex; flex-direction: column;
+    background: rgba(255, 255, 255, 0.3); backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.5); color: var(--angel-theme);
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
 }
+.card-back { transform: rotateY(180deg); }
+.is-demon .card-face { background: rgba(20, 0, 0, 0.6); border-color: rgba(239, 68, 68, 0.3); color: #fecaca; }
 
-.card-back { 
-    transform: rotateY(180deg); 
-}
+.card-subtitle { font-size: 10px; letter-spacing: 0.5em; opacity: 0.5; margin-bottom: 0.5rem; font-weight: 900; }
+.card-title { font-size: 3.75rem; font-weight: 900; margin-bottom: 2rem; letter-spacing: -0.05em; }
+.card-bio { font-size: 0.875rem; font-style: italic; opacity: 0.8; line-height: 1.625; min-height: 80px; }
+.info-row { display: flex; justify-content: space-between; border-bottom: 1px solid currentColor; padding-bottom: 0.25rem; }
+.info-label { font-size: 9px; font-weight: bold; text-transform: uppercase; opacity: 0.4; }
 
-/* 惡魔模式下的卡片色調 */
-.is-demon .card-face { 
-    background: rgba(20, 0, 0, 0.6); 
-    border-color: rgba(239, 68, 68, 0.3); 
-    color: #fecaca; 
-}
-
-/* =========================================
-   6. 社群連結樣式 (Social Links)
-   ========================================= */
+/* 社交連結 */
+.social-container { position: absolute; right: 6%; width: 280px; z-index: 120; display: flex; flex-direction: column; gap: 1rem; }
+.social-header { font-size: 10px; font-weight: 900; letter-spacing: 0.5em; opacity: 0.4; padding-left: 1rem; text-transform: uppercase; }
 .social-link {
-    position: relative; 
-    padding: 0.8rem 1.2rem; 
-    border-radius: 1.2rem;
-    background: rgba(255, 255, 255, 0.15); 
-    border: 1px solid rgba(255, 255, 255, 0.4); 
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    display: flex; 
-    align-items: center; 
-    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 0.8rem 1.2rem; border-radius: 1.2rem; display: flex; align-items: center; 
+    justify-content: space-between; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     text-decoration: none;
-    overflow: hidden;
 }
+.social-link:hover { transform: scale(1.05) translateX(10px); background: rgba(255, 255, 255, 0.4); }
+.is-demon .social-link { background: rgba(0, 0, 0, 0.3); border-color: rgba(239, 68, 68, 0.2); }
+.link-category { font-size: 8px; opacity: 0.5; text-transform: uppercase; font-weight: 900; display: block; }
+.link-text { font-size: 1.125rem; font-weight: 900; }
+.link-arrow { font-size: 1.25rem; opacity: 0.2; }
+.group:hover .link-arrow { opacity: 1; }
 
-.social-link:hover {
-    transform: scale(1.05) translateX(10px);
-    background: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
-}
-
-.social-link i {
-    width: 32px;
-    text-align: center;
-}
-
-/* 惡魔模式下的連結色調 */
-.is-demon .social-link { 
-    background: rgba(0, 0, 0, 0.3); 
-    border-color: rgba(239, 68, 68, 0.2); 
-}
-
-.is-demon .social-link:hover { 
-    border-color: #ef4444; 
-    box-shadow: 0 0 20px rgba(239, 68, 68, 0.3); 
-}
-
-/* =========================================
-   7. RP 頁面佈局 (RP Layout)
-   ========================================= */
-.rp-body { 
-    background: #0a0a0a; 
-    color: white; 
-    display: flex; 
-}
-
-.rp-sidebar { 
-    width: 320px; 
-    border-right: 1px solid rgba(255, 255, 255, 0.1); 
-    height: 100vh; 
-    padding: 4rem 2rem; 
-}
-
-.rp-main { 
-    flex: 1; 
-    height: 100vh; 
-    padding: 4rem; 
-    overflow-y: auto; 
-}
-
-.rp-menu-item { 
-    padding: 1.2rem; 
-    margin-bottom: 1rem; 
-    border-radius: 1rem; 
-    cursor: pointer; 
-    transition: 0.3s; 
-    border: 1px solid transparent; 
-    opacity: 0.5; 
-}
-
-.rp-menu-item.active { 
-    opacity: 1; 
-    background: rgba(239, 68, 68, 0.15); 
-    border-color: #ef4444; 
-}
-
-/* =========================================
-   8. 目錄
-   ========================================= */
+/* 目錄控制 */
 .menu-trigger {
-    position: fixed;
-    top: 2rem;
-    right: 2rem;
-    z-index: 1000;
-    width: 60px;
-    height: 60px;
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    border-radius: 1.2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    color: inherit; /* 跟隨主題色 */
+    position: fixed; top: 2rem; right: 2rem; z-index: 1000;
+    width: 60px; height: 60px; background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 1.2rem; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.4s ease;
 }
+.menu-trigger:hover { transform: scale(1.1) rotate(90deg); }
 
-.menu-trigger:hover {
-    transform: scale(1.1) rotate(90deg);
-    background: rgba(255, 255, 255, 0.4);
-}
-
-/* 全螢幕目錄頁面 */
 #nav-portal {
-    position: fixed;
-    inset: 0;
-    z-index: 2000;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(40px);
-    display: none; /* 預設隱藏 */
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.5s ease;
+    position: fixed; inset: 0; z-index: 2000; background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(40px); display: none; flex-direction: column; 
+    align-items: center; justify-content: center; opacity: 0; transition: opacity 0.5s ease;
 }
-
-#nav-portal.active {
-    display: flex;
-    opacity: 1;
-}
-
+#nav-portal.active { display: flex; opacity: 1; }
 .nav-item {
-    font-size: 4rem;
-    font-weight: 900;
-    color: white;
-    text-decoration: none;
-    margin: 1.5rem 0;
-    letter-spacing: 0.5rem;
-    transition: all 0.4s ease;
-    position: relative;
-    opacity: 0;
-    transform: translateY(30px);
+    font-size: 4rem; font-weight: 900; color: white; text-decoration: none;
+    margin: 1.5rem 0; letter-spacing: 0.5rem; transition: all 0.4s ease;
+    opacity: 0; transform: translateY(30px);
 }
-
-#nav-portal.active .nav-item {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* 依次彈出動畫 */
+#nav-portal.active .nav-item { opacity: 1; transform: translateY(0); }
 .nav-item:nth-child(1) { transition-delay: 0.1s; }
 .nav-item:nth-child(2) { transition-delay: 0.2s; }
 .nav-item:nth-child(3) { transition-delay: 0.3s; }
+.nav-item:hover { color: var(--demon-theme); transform: scale(1.1); letter-spacing: 1rem; }
+.nav-label { font-size: 0.75rem; display: block; opacity: 0.4; margin-bottom: 0.5rem; }
+.close-portal { position: absolute; top: 2rem; right: 2rem; font-size: 2rem; color: white; cursor: pointer; opacity: 0.5; }
 
-.nav-item:hover {
-    color: var(--demon-theme);
-    transform: scale(1.1);
-    letter-spacing: 1rem;
-}
-
-/* 關閉按鈕 */
-.close-portal {
-    position: absolute;
-    top: 2rem;
-    right: 2rem;
-    font-size: 2rem;
-    color: white;
-    cursor: pointer;
-    opacity: 0.5;
-}
-.close-portal:hover { opacity: 1; }
+/* RP 專用背景 */
+.rp-body { background: #0a0a0a; color: white; display: flex; }
+@keyframes rpFade { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }

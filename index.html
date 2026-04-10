@@ -2,10 +2,11 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>天雪夕納</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天雪夕納 | Official Website</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="stage" id="mainStage">
@@ -22,40 +23,34 @@
             <div class="close-portal" onclick="togglePortal(false)">
                 <i class="fa-solid fa-xmark"></i>
             </div>
-            
             <a href="index.html" class="nav-item">
-                <span class="text-xs block opacity-40 mb-2">GATEWAY</span>
-                主頁
+                <span class="nav-label">GATEWAY</span>主頁
             </a>
-            
             <a href="rp.html" class="nav-item">
-                <span class="text-xs block opacity-40 mb-2">RP ARCHIVES</span>
-                RP歷史記錄
+                <span class="nav-label">RP ARCHIVES</span>RP歷史記錄
             </a>
-
             <a href="#" class="nav-item opacity-20 cursor-not-allowed">
-                <span class="text-xs block mb-2">GALLERY</span>
-                記憶碎片
+                <span class="nav-label">GALLERY</span>記憶碎片
             </a>
         </div>
 
         <div class="absolute left-[6%] z-[120] info-card-container">
             <div class="info-card-inner" id="mainCard">
                 <div class="card-face card-front">
-                    <h3 class="text-[10px] tracking-[0.5em] opacity-50 mb-2 font-black">IDENTITY / 身份證</h3>
-                    <h2 class="text-6xl font-black mb-8 tracking-tighter" id="nameDisplay">天雪</h2>
-                    <p class="text-sm italic opacity-80 leading-relaxed mb-8 min-h-[80px]" id="bioText"></p>
+                    <h3 class="card-subtitle">IDENTITY / 身份證</h3>
+                    <h2 class="card-title" id="nameDisplay">天雪</h2>
+                    <p class="card-bio" id="bioText"></p>
                     <div class="mt-auto space-y-5">
-                        <div class="flex justify-between border-b border-current/20 pb-1">
-                            <span class="text-[9px] opacity-40 font-bold uppercase">生日</span><span class="font-black" id="birthVal"></span>
+                        <div class="info-row">
+                            <span class="info-label">生日</span><span class="font-black" id="birthVal"></span>
                         </div>
-                        <div class="flex justify-between border-b border-current/20 pb-1">
-                            <span class="text-[9px] opacity-40 font-bold uppercase">種族</span><span class="font-black" id="raceVal"></span>
+                        <div class="info-row">
+                            <span class="info-label">種族</span><span class="font-black" id="raceVal"></span>
                         </div>
                     </div>
                 </div>
                 <div class="card-face card-back">
-                    <h3 class="text-[10px] tracking-[0.5em] opacity-50 mb-2 font-black uppercase">Biography</h3>
+                    <h3 class="card-subtitle uppercase">Biography</h3>
                     <h2 class="text-4xl font-black mb-6" id="aboutTitle"></h2>
                     <div class="text-sm space-y-5 leading-relaxed font-medium" id="aboutContent"></div>
                 </div>
@@ -63,156 +58,69 @@
         </div>
 
         <div class="model-wrap">
-            <img src="Tachie.png" class="tachie tachie-angel" alt="Angel">
-            <img src="Tachie_Demon.png" class="tachie tachie-demon" alt="Demon">
+            <img src="image/Tachie.png" class="tachie tachie-angel" alt="Angel">
+            <img src="image/Tachie_Demon.png" class="tachie tachie-demon" alt="Demon">
         </div>
-<div class="absolute right-[6%] w-[280px] z-[120] flex flex-col gap-4">
-    <h3 class="text-[10px] font-black tracking-[0.5em] opacity-40 mb-1 pl-4 uppercase" id="connectTitle">數據連接</h3>
-    
-    <a href="#" class="social-link group" id="linkYt" target="_blank">
-        <div class="flex items-center gap-4">
-            <i class="fab fa-youtube text-2xl opacity-70 group-hover:opacity-100 transition-opacity"></i>
-            <div>
-                <span class="block text-[8px] opacity-50 uppercase font-black">YouTube</span>
-                <span class="text-lg font-black">直播現場</span>
-            </div>
-        </div>
-        <span class="text-xl opacity-20 group-hover:opacity-100">↗</span>
-    </a>
 
-    <a href="#" class="social-link group" id="linkX" target="_blank">
-        <div class="flex items-center gap-4">
-            <i class="fab fa-x-twitter text-2xl opacity-70 group-hover:opacity-100 transition-opacity"></i>
-            <div>
-                <span class="block text-[8px] opacity-50 uppercase font-black">Twitter / X</span>
-                <span class="text-lg font-black">日常發布</span>
-            </div>
-        </div>
-        <span class="text-xl opacity-20 group-hover:opacity-100">↗</span>
-    </a>
-
-    <a href="#" class="social-link group" id="linkTw" target="_blank">
-        <div class="flex items-center gap-4">
-            <i class="fab fa-twitch text-2xl opacity-70 group-hover:opacity-100 transition-opacity"></i>
-            <div>
-                <span class="block text-[8px] opacity-50 uppercase font-black">Twitch</span>
-                <span class="text-lg font-black">即時互動</span>
-            </div>
-        </div>
-        <span class="text-xl opacity-20 group-hover:opacity-100">↗</span>
-    </a>
-
-    <a href="#" class="social-link group" id="linkIg" target="_blank">
-        <div class="flex items-center gap-4">
-            <i class="fab fa-instagram text-2xl opacity-70 group-hover:opacity-100 transition-opacity"></i>
-            <div>
-                <span class="block text-[8px] opacity-50 uppercase font-black">Instagram</span>
-                <span class="text-lg font-black">生活碎片</span>
-            </div>
-        </div>
-        <span class="text-xl opacity-20 group-hover:opacity-100">↗</span>
-    </a>
-
-    <a href="#" class="social-link group" id="linkTk" target="_blank">
-        <div class="flex items-center gap-4">
-            <i class="fab fa-tiktok text-2xl opacity-70 group-hover:opacity-100 transition-opacity"></i>
-            <div>
-                <span class="block text-[8px] opacity-50 uppercase font-black">TikTok</span>
-                <span class="text-lg font-black">短影剪輯</span>
-            </div>
-        </div>
-        <span class="text-xl opacity-20 group-hover:opacity-100">↗</span>
-    </a>
-</div>
-    </div>
-
-    <script>
-        const config = {
-            angel: { 
-                name: "天雪", 
-                birth: "09 / 21", 
-                race: "天使", 
-                bio: "「願這場冬雪，能洗淨世間所有的哀愁。」", 
-                color: "#0369a1", 
-                aboutTitle: "關於天雪", 
-                aboutDesc: "這裡是天雪。喜歡深夜的寂靜，希望能透過歌聲溫暖迷路的靈魂。",
-                links: {
-                    yt: "https://www.youtube.com/@AmayukiShiina",
-                    x: "https://x.com/Shiina_Amayuk1",
-                    tw: "https://www.twitch.tv/amayukishiina",
-                    ig: "https://www.instagram.com/amayuki_shiina/",
-                    tk: "https://www.tiktok.com/@amayukishiina"
-                }
-            },
-            demon: { 
-                name: "夕納", 
-                birth: "09 / 16", 
-                race: "惡魔", 
-                bio: "「讓紅色的雪蓋過一切吧，靈魂什麼的...不需要喔。」", 
-                color: "#f87171", 
-                aboutTitle: "關於夕納", 
-                aboutDesc: "夕納。紅色的雪並不是悲傷，而是極致的狂歡。沒打算放你走喔。" ,
-                links: {
-                    yt: "https://www.youtube.com/@AmayukiShiina",
-                    x: "https://x.com/Shiina_Amayuk1",
-                    tw: "https://www.twitch.tv/amayukishiina",
-                    ig: "https://www.instagram.com/amayuki_shiina/",
-                    tk: "https://www.tiktok.com/@amayukishiina"
-                }
-            }
-        };
-
-        function updateMode(mode) {
-            const d = config[mode];
+        <div class="social-container">
+            <h3 class="social-header" id="connectTitle">數據連接</h3>
             
-            // 1. 更新選單按鈕顏色
-            const menuBtn = document.getElementById('menuBtn');
-            if(menuBtn) {
-                menuBtn.style.color = d.color;
-                menuBtn.style.borderColor = d.color + "66";
-            }
+            <a href="#" class="social-link group" id="linkYt">
+                <div class="flex items-center gap-4">
+                    <i class="fab fa-youtube text-2xl opacity-70 group-hover:opacity-100"></i>
+                    <div>
+                        <span class="link-category">YouTube</span>
+                        <span class="link-text">直播現場</span>
+                    </div>
+                </div>
+                <span class="link-arrow">↗</span>
+            </a>
 
-            // 2. 更新舞台與背景大字
-            document.getElementById('mainStage').className = 'stage ' + (mode === 'demon' ? 'is-demon' : '');
-            document.getElementById('bgTitle').innerText = d.name;
+            <a href="#" class="social-link group" id="linkX">
+                <div class="flex items-center gap-4">
+                    <i class="fab fa-x-twitter text-2xl opacity-70 group-hover:opacity-100"></i>
+                    <div>
+                        <span class="link-category">Twitter / X</span>
+                        <span class="link-text">日常發布</span>
+                    </div>
+                </div>
+                <span class="link-arrow">↗</span>
+            </a>
 
-            // 3. 更新身份卡片內容
-            document.getElementById('nameDisplay').innerText = d.name;
-            document.getElementById('birthVal').innerText = d.birth;
-            document.getElementById('raceVal').innerText = d.race;
-            document.getElementById('bioText').innerText = d.bio;
-            document.getElementById('aboutTitle').innerText = d.aboutTitle;
-            document.getElementById('aboutContent').innerHTML = d.aboutDesc;
+            <a href="#" class="social-link group" id="linkTw">
+                <div class="flex items-center gap-4">
+                    <i class="fab fa-twitch text-2xl opacity-70 group-hover:opacity-100"></i>
+                    <div>
+                        <span class="link-category">Twitch</span>
+                        <span class="link-text">即時互動</span>
+                    </div>
+                </div>
+                <span class="link-arrow">↗</span>
+            </a>
 
-            // 4. 更新連結標題顏色
-            document.getElementById('connectTitle').style.color = d.color;
+            <a href="#" class="social-link group" id="linkIg">
+                <div class="flex items-center gap-4">
+                    <i class="fab fa-instagram text-2xl opacity-70 group-hover:opacity-100"></i>
+                    <div>
+                        <span class="link-category">Instagram</span>
+                        <span class="link-text">生活碎片</span>
+                    </div>
+                </div>
+                <span class="link-arrow">↗</span>
+            </a>
 
-            // 5. 更新所有社交連結的 href 與 顏色 (修正顏色不對的問題)
-            const linkIds = ['linkYt', 'linkX', 'linkTw', 'linkIg', 'linkTk'];
-            const linkKeys = ['yt', 'x', 'tw', 'ig', 'tk'];
-
-            linkIds.forEach((id, index) => {
-                const el = document.getElementById(id);
-                if(el) {
-                    el.href = d.links[linkKeys[index]]; // 更新網址
-                    el.target = "_blank";               // 確保新分頁開啟
-                    el.style.color = d.color;           // 這裡強制同步顏色
-                }
-            });
-        }
-
-        function togglePortal(open) {
-            const portal = document.getElementById('nav-portal');
-            if (open) {
-                portal.style.display = 'flex';
-                setTimeout(() => portal.classList.add('active'), 10);
-            } else {
-                portal.classList.remove('active');
-                setTimeout(() => portal.style.display = 'none', 500);
-            }
-        }
-
-        updateMode('angel');
-    </script>
+            <a href="#" class="social-link group" id="linkTk">
+                <div class="flex items-center gap-4">
+                    <i class="fab fa-tiktok text-2xl opacity-70 group-hover:opacity-100"></i>
+                    <div>
+                        <span class="link-category">TikTok</span>
+                        <span class="link-text">短影剪輯</span>
+                    </div>
+                </div>
+                <span class="link-arrow">↗</span>
+            </a>
+        </div>
+    </div>
+    <script src="main.js"></script>
 </body>
 </html>

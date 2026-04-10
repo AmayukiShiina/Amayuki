@@ -1,0 +1,15 @@
+{
+    "Type": "Live2D Expression",
+    "Parameters": [
+        {
+            "Id": "ParamAngleY",
+            "Value": "-3.12405",
+            "Blend": "Add"
+        },
+        {
+            "Id": "ParamAngleZ",
+            "Value": "30",
+            "Blend": "Add"
+        }
+    ]
+}
