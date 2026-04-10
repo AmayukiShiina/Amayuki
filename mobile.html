@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>天雪夕納 | M.Official Website</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/style-mobile.css"> </head>
+    <script>
+    if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        window.location.href = "index.html";
+    }
+</script>
+<body>
+    <div class="mobile-stage" id="mainStage">
+        
+        <div class="ui-overlay">
+            <div class="mode-toggle" onclick="handleModeSwitch()">
+                <i id="modeIcon" class="fa-solid fa-moon"></i>
+            </div>
+            <div class="menu-trigger" onclick="togglePortal(true)">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+        </div>
+
+        <main class="content-scroll">
+            
+            <section class="section-card">
+                <div class="info-card-container">
+                    </div>
+            </section>
+
+            <section class="section-model">
+                <div class="model-wrap">
+                    <canvas id="canvas"></canvas>
+                </div>
+            </section>
+
+            <section class="section-about">
+                <h2 id="aboutTitle"></h2>
+                <div id="aboutContent"></div>
+            </section>
+
+            <section class="section-links">
+                <div class="social-container">
+                    </div>
+            </section>
+
+        </main>
+    </div>
+
+    <div id="nav-portal" class="portal"> ... </div>
+
+    <script src="js/mobile.js"></script>
+</body>
+</html>
