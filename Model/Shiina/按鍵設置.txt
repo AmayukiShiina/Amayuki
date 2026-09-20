@@ -1,0 +1,18 @@
+Left control + Numberpad 1 = 傷心
+Left control + Numberpad 2 = 生氣
+Left control + Numberpad 3 = 黑臉
+Left control + Numberpad 4 = 臉紅
+Left control + Numberpad 5 = 流淚
+Left control + Numberpad 6 = 流汗
+Left control + Numberpad 7 = 豆豆眼
+Left control + Numberpad 8 = 空洞眼
+
+Left control + Numberkey 1 = 形態切換（白切黑）
+Left control + Numberkey 2 = 形態切換（黑切白）
+Left control + Numberkey 3 = 後髪切換
+Left control + Numberkey 4 = 麥克風
+Left control + Numberkey 5 = 吉他
+Left control + Numberkey 6 = 翅膀
+Left control + Numberkey 7 = 外套
+
+Left control + Numberpad 0 = 重置恢復默認

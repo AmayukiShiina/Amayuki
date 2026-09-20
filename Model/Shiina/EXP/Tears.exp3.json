@@ -1,0 +1,20 @@
+{
+	"Type": "Live2D Expression",
+	"Parameters": [
+		{
+			"Id": "toggle_11",
+			"Value": 1,
+			"Blend": "Add"
+		},
+		{
+			"Id": "ParamEyebrowToggle",
+			"Value": -1,
+			"Blend": "Add"
+		},
+		{
+			"Id": "ParamMouthToggle",
+			"Value": 1,
+			"Blend": "Add"
+		}
+	]
+}

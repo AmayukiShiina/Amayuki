@@ -1,0 +1,28 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "Shiina.moc3",
+		"Textures": [
+			"Shiina.8192/texture_00.png",
+			"Shiina.8192/texture_01.png",
+			"Shiina.8192/texture_02.png"
+		],
+		"Physics": "Shiina.physics3.json",
+		"DisplayInfo": "Shiina.cdi3.json"
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": [
+				"ParamEyeLOpen",
+				"ParamEyeROpen"
+			]
+		},
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": []
+		}
+	]
+}
