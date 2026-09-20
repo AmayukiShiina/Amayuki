@@ -778,7 +778,7 @@ async function PixiLive() {
             model.x = app.screen.width * 0.5;
 
             // 數值越小，人物越往上
-            model.y = app.screen.height * 0.42;
+            model.y = app.screen.height * 0.35;
 
         };
 
