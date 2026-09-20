@@ -26,7 +26,7 @@ const MOTIONS = {
 const INITIAL_MODE = "angel";
 
 // 模型縮放比例
-const MODEL_SCALE = 0.25;
+const MODEL_SCALE = 0.20;
 
 
 /* =========================================
@@ -775,11 +775,10 @@ async function PixiLive() {
 
         const updatePosition = () => {
 
-            model.x =
-                app.screen.width * 0.5;
+            model.x = app.screen.width * 0.5;
 
-            model.y =
-                app.screen.height * 0.5;
+            // 數值越小，人物越往上
+            model.y = app.screen.height * 0.42;
 
         };
 
