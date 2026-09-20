@@ -255,32 +255,86 @@ function updateMode(mode) {
    5. CHARACTER CARD UI
 ========================================= */
 
+
 function updateCharacterCards(mode) {
 
-    const cards =
-        document.querySelectorAll(
-            ".character-option[data-mode]"
-        );
+    const card = document.getElementById("characterToggle");
 
+    if (!card) return;
 
-    cards.forEach(card => {
+    // 顯示下一個可以切換的角色
+    const targetMode = mode === "angel"
+        ? "demon"
+        : "angel";
 
-        const selected =
-            card.dataset.mode === mode;
+    card.dataset.mode = targetMode;
 
+    const icon = card.querySelector(
+        ".character-option-icon"
+    );
 
-        card.classList.toggle(
-            "selected",
-            selected
-        );
+    const iconElement = icon?.querySelector("i");
 
+    const subtitle = card.querySelector(
+        ".character-option-subtitle"
+    );
 
-        card.setAttribute(
-            "aria-pressed",
-            String(selected)
-        );
+    const name = card.querySelector(
+        ".character-option-name"
+    );
 
-    });
+    if (targetMode === "demon") {
+
+        if (icon) {
+            icon.className =
+                "character-option-icon demon-icon";
+        }
+
+        if (iconElement) {
+            iconElement.className =
+                "fa-solid fa-moon";
+        }
+
+        if (subtitle) {
+            subtitle.textContent = "SWITCH TO DEMON";
+        }
+
+        if (name) {
+            name.textContent = "切換至夕納";
+        }
+
+    } else {
+
+        if (icon) {
+            icon.className =
+                "character-option-icon angel-icon";
+        }
+
+        if (iconElement) {
+            iconElement.className =
+                "fa-solid fa-snowflake";
+        }
+
+        if (subtitle) {
+            subtitle.textContent = "SWITCH TO ANGEL";
+        }
+
+        if (name) {
+            name.textContent = "切換至天雪";
+        }
+
+    }
+
+    card.setAttribute(
+        "aria-label",
+        targetMode === "demon"
+            ? "切換至夕納"
+            : "切換至天雪"
+    );
+
+    card.setAttribute("aria-pressed", "false");
+
+    card.classList.remove("selected");
 
 }
 
