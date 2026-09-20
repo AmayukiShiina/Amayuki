@@ -191,9 +191,10 @@
                     <!-- 天雪 -->
                     <button
                         type="button"
-                        class="character-option selected"
+                        class="character-option"
                         data-mode="angel"
-                        aria-pressed="true"
+                        aria-pressed="false"
+                        onclick="switchCharacter('demon')"
                     >
 
                         <span class="character-option-icon angel-icon">
@@ -224,9 +225,10 @@
                     <!-- 夕納 -->
                     <button
                         type="button"
-                        class="character-option"
-                        data-mode="demon"
-                        aria-pressed="false"
+                        class="character-option selected"
+                        data-mode="angel"
+                        aria-pressed="true"
+                        onclick="switchCharacter('angel')"
                     >
 
                         <span class="character-option-icon demon-icon">
@@ -421,7 +423,7 @@
 
     </main>
 
-    <script src="js/main.js"></script>
+    <script src="./js/main.js?v=20260920-4"></script>
 
 </body>
 
