@@ -377,6 +377,26 @@ async function switchCharacter(targetMode) {
     // 已經是目前角色
     if (targetMode === currentMode) return;
 
+    
+    /* =========================================
+    清除 Live2D 變身特效
+    ========================================= */
+
+    function clearTransformationEffect() {
+
+        if (!window.myModel) return;
+
+        const core =
+            window.myModel.internalModel.coreModel;
+
+        // 恢復特效參數
+        core.setParameterValueById("toggle_21", 0);
+        core.setParameterValueById("toggle_22", -10);
+
+        console.log("Live2D 變身特效已清除");
+
+    }
+
 
     /* =====================================
        1. 立即切換網站背景及內容
@@ -474,12 +494,17 @@ async function switchCharacter(targetMode) {
     };
 
 
+
     const onMotionFinish = () => {
 
+        // 動畫播放結束
         cleanup();
 
+        // 清除殘留特效
+        clearTransformationEffect();
+
         console.log(
-            "Live2D 變身動畫播放完成"
+            "Live2D 變身完成，特效已清除"
         );
 
     };
