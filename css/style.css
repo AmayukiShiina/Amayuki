@@ -1,239 +1,1305 @@
+
+/* =========================================
+   THEME VARIABLES
+========================================= */
+
 :root {
-  --angel-bg: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
-  --angel-theme: #0369a1;
-  --demon-bg: linear-gradient(135deg, #1a0505 0%, #450a0a 100%);
-  --demon-theme: #f87171;
-  --transition-speed: 0.8s;
-  --transition-curve: cubic-bezier(0.4, 0, 0.2, 1);
+
+    --angel-bg:
+        linear-gradient(
+            135deg,
+            #e0f2fe 0%,
+            #bae6fd 100%
+        );
+
+    --angel-theme: #0369a1;
+
+    --demon-bg:
+        linear-gradient(
+            135deg,
+            #1a0505 0%,
+            #450a0a 100%
+        );
+
+    --demon-theme: #f87171;
+
+    --transition-speed: 0.8s;
+
+    --transition-curve:
+        cubic-bezier(0.4, 0, 0.2, 1);
+
 }
 
-/* 基礎設定 */
-body, html {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  overflow: hidden;
-  font-family: 'Noto Sans TC', sans-serif;
+
+/* =========================================
+   BASE
+========================================= */
+
+* {
+    box-sizing: border-box;
 }
 
-/* 舞台容器 */
-.stage {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--angel-bg);
-  transition: background var(--transition-speed) var(--transition-curve);
-}
-.stage.is-demon { background: var(--demon-bg); }
+html,
+body {
 
-/* 交互區 */
-.hover-zone {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: 15vh;
-  z-index: 100;
-}
-.zone-top { top: 0; }
-.zone-bottom { bottom: 0; }
+    margin: 0;
+    padding: 0;
 
-/* 背景裝飾大字 */
-.bg-title {
-  position: absolute;
-  font-family: 'Noto Serif TC', serif;
-  font-size: 25vw;
-  font-weight: 900;
-  color: #ffffff;
-  opacity: 0.6;
-  text-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-  transition: all var(--transition-speed);
-  pointer-events: none;
-  z-index: 0;
-}
-.is-demon .bg-title { opacity: 0.1; }
-
-.model-wrap {
-    position: fixed;
-    inset: 0;
-    z-index: 10; /* 調低一點，確保在 UI 卡片 (120) 之下 */
-    pointer-events: none; /* 關鍵：讓點擊穿透到下面的 UI */
-}
-
-#canvas {
     width: 100%;
     height: 100%;
+
+    overflow: hidden;
+
+    font-family:
+        'Noto Sans TC',
+        sans-serif;
+
+}
+
+
+/* =========================================
+   MAIN STAGE
+========================================= */
+
+.stage {
+
     position: relative;
-    z-index: 60;
+
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    isolation: isolate;
+
+    background: #e0f2fe;
+
+    overflow: hidden;
+
 }
 
-.tachie {
-  height: 100%;
-  object-fit: contain;
-  position: absolute;
-  bottom: 0;
-  transition: all var(--transition-speed) var(--transition-curve);
+
+/* 天使背景 */
+
+.stage::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        135deg,
+        #e0f2fe 0%,
+        #bae6fd 100%
+    );
+    opacity: 1;
+    transition: opacity 0.8s ease;
+    pointer-events: none;
+    z-index: -2;
 }
 
-.tachie-angel { 
-  opacity: 1; 
-  filter: drop-shadow(0 0 20px rgba(255,255,255,0.8)); 
-}
-.tachie-demon { 
-  opacity: 0; 
-  transform: translateY(20px); 
-  filter: drop-shadow(0 0 30px rgba(239,68,68,0.5)); 
+
+/* 惡魔背景 */
+
+.stage::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        135deg,
+        #1a0505 0%,
+        #450a0a 100%
+    );
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    pointer-events: none;
+    z-index: -1;
 }
 
-.is-demon .tachie-angel { opacity: 0; transform: translateY(-20px); }
-.is-demon .tachie-demon { opacity: 1; transform: translateY(0); }
 
-/* 身份卡片組件 */
-.info-card-container { 
-  position: absolute; 
-  left: 6%; 
-  z-index: 120; 
-  perspective: 1500px; 
+/* 切換成惡魔 */
+
+.stage.is-demon::before {
+
+    opacity: 0;
+
 }
+
+.stage.is-demon::after {
+
+    opacity: 1;
+
+}
+
+
+/* =========================================
+   BACKGROUND TITLE
+========================================= */
+
+.bg-title {
+
+    position: absolute;
+
+    font-family:
+        'Noto Serif TC',
+        serif;
+
+    font-size: 25vw;
+
+    font-weight: 900;
+
+    color: #ffffff;
+
+    opacity: 0.6;
+
+    text-shadow:
+        0 5px 15px rgba(0, 0, 0, 0.05);
+
+    transition:
+        opacity var(--transition-speed),
+        color var(--transition-speed);
+
+    pointer-events: none;
+
+    user-select: none;
+
+    white-space: nowrap;
+
+    z-index: 0;
+
+}
+
+
+.is-demon .bg-title {
+
+    opacity: 0.1;
+
+}
+
+
+/* =========================================
+   LIVE2D
+========================================= */
+
+.model-wrap {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 10;
+
+    pointer-events: none;
+
+}
+
+
+#canvas {
+
+    position: relative;
+
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    pointer-events: none;
+
+}
+
+
+/* =========================================
+   LEFT IDENTITY CARD
+========================================= */
+
+.info-card-container {
+
+    position: absolute;
+
+    left: 6%;
+
+    z-index: 120;
+
+    perspective: 1500px;
+
+}
+
 
 .info-card-inner {
-  position: relative;
-  width: 360px;
-  height: 460px;
-  transition: transform 0.8s var(--transition-curve);
-  transform-style: preserve-3d;
-  cursor: pointer;
+
+    position: relative;
+
+    width: 360px;
+    height: 460px;
+
+    transition:
+        transform 0.8s var(--transition-curve);
+
+    transform-style: preserve-3d;
+
+    cursor: pointer;
+
 }
 
-.info-card-container:hover .info-card-inner { transform: rotateY(180deg); }
+
+/* 保留原本滑鼠移入翻面 */
+
+.info-card-container:hover
+.info-card-inner {
+
+    transform: rotateY(180deg);
+
+}
+
+
+/* 卡片正反面 */
 
 .card-face {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
-  border-radius: 2.5rem;
-  padding: 2.5rem;
-  display: flex;
-  flex-direction: column;
-  background: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(30px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  color: var(--angel-theme);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
-  transition: all 0.5s ease;
+
+    position: absolute;
+
+    inset: 0;
+
+    backface-visibility: hidden;
+
+    border-radius: 2.5rem;
+
+    padding: 2.5rem;
+
+    display: flex;
+
+    flex-direction: column;
+
+    background:
+        rgba(255, 255, 255, 0.3);
+
+    backdrop-filter: blur(30px);
+
+    -webkit-backdrop-filter: blur(30px);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.5);
+
+    color: var(--angel-theme);
+
+    box-shadow:
+        0 25px 50px -12px
+        rgba(0, 0, 0, 0.1);
+
+    transition:
+        background 0.5s ease,
+        border-color 0.5s ease,
+        color 0.5s ease;
+
 }
+
 
 .is-demon .card-face {
-  background: rgba(20, 0, 0, 0.6);
-  border-color: rgba(239, 68, 68, 0.3);
-  color: #fecaca;
+
+    background:
+        rgba(20, 0, 0, 0.6);
+
+    border-color:
+        rgba(239, 68, 68, 0.3);
+
+    color: #fecaca;
+
 }
 
-.card-back { transform: rotateY(180deg); }
 
-.card-subtitle { font-size: 10px; letter-spacing: 0.5em; opacity: 0.5; margin-bottom: 0.5rem; font-weight: 900; text-transform: uppercase; }
-.card-title { font-size: 3.75rem; font-weight: 900; margin-bottom: 2rem; letter-spacing: -0.05em; }
-.card-bio { font-size: 0.875rem; font-style: italic; opacity: 0.8; line-height: 1.625; min-height: 80px; }
-.info-row { display: flex; justify-content: space-between; border-bottom: 1px solid currentColor; padding-bottom: 0.25rem; }
-.info-label { font-size: 9px; font-weight: bold; text-transform: uppercase; opacity: 0.4; }
-.info-value { font-weight: 900; }
+.card-back {
 
-/* 社群連結 */
+    transform: rotateY(180deg);
+
+}
+
+
+/* 身份資訊 */
+
+.card-subtitle {
+
+    font-size: 10px;
+
+    letter-spacing: 0.5em;
+
+    opacity: 0.5;
+
+    margin-bottom: 0.5rem;
+
+    font-weight: 900;
+
+    text-transform: uppercase;
+
+}
+
+
+.card-title {
+
+    font-size: 3.75rem;
+
+    font-weight: 900;
+
+    margin-bottom: 2rem;
+
+    letter-spacing: -0.05em;
+
+}
+
+
+.card-bio {
+
+    font-size: 0.875rem;
+
+    font-style: italic;
+
+    opacity: 0.8;
+
+    line-height: 1.625;
+
+    min-height: 80px;
+
+}
+
+
+.info-row {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    border-bottom:
+        1px solid currentColor;
+
+    padding-bottom: 0.25rem;
+
+}
+
+
+.info-label {
+
+    font-size: 9px;
+
+    font-weight: bold;
+
+    text-transform: uppercase;
+
+    opacity: 0.4;
+
+}
+
+
+.info-value {
+
+    font-weight: 900;
+
+}
+
+
+/* =========================================
+   RIGHT PANEL
+========================================= */
+
+.right-panel {
+
+    position: absolute;
+
+    right: 6%;
+
+    width: 280px;
+
+    z-index: 120;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 1.5rem;
+
+}
+
+
+/* =========================================
+   CHARACTER SWITCH
+========================================= */
+
+.character-switch {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 0.8rem;
+
+}
+
+
+/* SELECT IDENTITY */
+
+.switch-heading {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.8rem;
+
+    padding-left: 0.8rem;
+
+}
+
+
+.switch-heading-line {
+
+    width: 20px;
+    height: 1px;
+
+    background: var(--angel-theme);
+
+    opacity: 0.6;
+
+    transition:
+        background 0.5s ease;
+
+}
+
+
+.is-demon .switch-heading-line {
+
+    background: var(--demon-theme);
+
+}
+
+
+.switch-heading-text {
+
+    font-size: 9px;
+
+    letter-spacing: 0.3em;
+
+    font-weight: 900;
+
+    color: var(--angel-theme);
+
+    opacity: 0.65;
+
+    transition:
+        color 0.5s ease;
+
+}
+
+
+.is-demon .switch-heading-text {
+
+    color: var(--demon-theme);
+
+}
+
+
+/* 小卡片容器 */
+
+.character-options {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 0.65rem;
+
+}
+
+
+/* 單張角色卡片 */
+
+.character-option {
+
+    position: relative;
+
+    width: 100%;
+
+    min-height: 66px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.85rem;
+
+    padding: 0.8rem 1rem;
+
+    border-radius: 1.2rem;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.5);
+
+    background:
+        rgba(255, 255, 255, 0.2);
+
+    backdrop-filter: blur(15px);
+
+    -webkit-backdrop-filter: blur(15px);
+
+    color: var(--angel-theme);
+
+    text-align: left;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.03);
+
+    transition:
+        transform 0.35s ease,
+        background 0.35s ease,
+        border-color 0.35s ease,
+        box-shadow 0.35s ease,
+        color 0.35s ease,
+        opacity 0.35s ease;
+
+}
+
+
+/* Hover */
+
+.character-option:hover:not(:disabled) {
+
+    transform: translateX(-5px);
+
+    background:
+        rgba(255, 255, 255, 0.45);
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.08);
+
+}
+
+
+/* Icon */
+
+.character-option-icon {
+
+    width: 38px;
+    height: 38px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 0.8rem;
+
+    font-size: 1rem;
+
+    background:
+        rgba(255, 255, 255, 0.35);
+
+}
+
+
+/* 天雪 Icon */
+
+.angel-icon {
+
+    color: #0284c7;
+
+}
+
+
+/* 夕納 Icon */
+
+.demon-icon {
+
+    color: #ef4444;
+
+}
+
+
+/* 文字區 */
+
+.character-option-content {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 0.15rem;
+
+    flex: 1;
+
+}
+
+
+.character-option-subtitle {
+
+    font-size: 8px;
+
+    font-weight: 900;
+
+    letter-spacing: 0.18em;
+
+    opacity: 0.55;
+
+}
+
+
+.character-option-name {
+
+    font-size: 1.15rem;
+
+    font-weight: 900;
+
+    letter-spacing: 0.05em;
+
+}
+
+
+/* 箭頭 */
+
+.character-option-arrow {
+
+    font-size: 0.8rem;
+
+    opacity: 0.2;
+
+    transform: translateX(-5px);
+
+    transition:
+        opacity 0.3s ease,
+        transform 0.3s ease;
+
+}
+
+
+.character-option:hover
+.character-option-arrow {
+
+    opacity: 1;
+
+    transform: translateX(0);
+
+}
+
+
+/* =========================================
+   SELECTED CHARACTER
+========================================= */
+
+/* 天雪選取 */
+
+.character-option[data-mode="angel"].selected {
+
+    background:
+        rgba(255, 255, 255, 0.65);
+
+    border-color:
+        rgba(3, 105, 161, 0.55);
+
+    color: #0369a1;
+
+    box-shadow:
+        0 0 20px rgba(3, 105, 161, 0.12);
+
+}
+
+
+/* 夕納選取 */
+
+.character-option[data-mode="demon"].selected {
+
+    background:
+        rgba(69, 10, 10, 0.75);
+
+    border-color:
+        rgba(248, 113, 113, 0.65);
+
+    color: #fecaca;
+
+    box-shadow:
+        0 0 25px rgba(248, 113, 113, 0.13);
+
+}
+
+
+/* 選取的箭頭 */
+
+.character-option.selected
+.character-option-arrow {
+
+    opacity: 1;
+
+    transform: translateX(0);
+
+}
+
+
+/* 惡魔主題下，未選取的卡片 */
+
+.is-demon .character-option:not(.selected) {
+
+    background:
+        rgba(0, 0, 0, 0.25);
+
+    border-color:
+        rgba(248, 113, 113, 0.2);
+
+    color: #fecaca;
+
+}
+
+
+.is-demon
+.character-option:not(.selected):hover {
+
+    background:
+        rgba(69, 10, 10, 0.6);
+
+}
+
+
+/* 動畫播放期間 */
+
+.character-option.is-transforming {
+
+    pointer-events: none;
+
+    cursor: wait;
+
+}
+
+
+/* 鍵盤焦點 */
+
+.character-option:focus-visible {
+
+    outline:
+        2px solid currentColor;
+
+    outline-offset: 3px;
+
+}
+
+
+/* =========================================
+   SOCIAL LINKS
+========================================= */
+
 .social-container {
-  position: absolute;
-  right: 6%;
-  width: 280px;
-  z-index: 120;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+
+    position: relative;
+
+    width: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 0.7rem;
+
 }
 
-.social-header { font-size: 10px; font-weight: 900; letter-spacing: 0.5em; opacity: 0.4; padding-left: 1rem; text-transform: uppercase; }
+
+.social-header {
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    letter-spacing: 0.5em;
+
+    opacity: 0.4;
+
+    padding-left: 1rem;
+
+    text-transform: uppercase;
+
+    margin-bottom: 0.2rem;
+
+}
+
 
 .social-link {
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  padding: 0.8rem 1.2rem;
-  border-radius: 1.2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  transition: all 0.4s var(--transition-curve);
-  text-decoration: none;
+
+    background:
+        rgba(255, 255, 255, 0.15);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.4);
+
+    padding:
+        0.7rem 1.2rem;
+
+    border-radius: 1.2rem;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    transition:
+        transform 0.4s var(--transition-curve),
+        background 0.4s ease,
+        border-color 0.4s ease;
+
+    text-decoration: none;
+
 }
+
 
 .social-link:hover {
-  transform: scale(1.05) translateX(10px);
-  background: rgba(255, 255, 255, 0.4);
+
+    transform:
+        scale(1.04) translateX(6px);
+
+    background:
+        rgba(255, 255, 255, 0.4);
+
 }
+
+
+/* 惡魔主題 */
 
 .is-demon .social-link {
-  background: rgba(0, 0, 0, 0.3);
-  border-color: rgba(239, 68, 68, 0.2);
+
+    background:
+        rgba(0, 0, 0, 0.3);
+
+    border-color:
+        rgba(239, 68, 68, 0.2);
+
 }
 
-.social-icon { opacity: 0.7; transition: opacity 0.3s; }
-.social-link:hover .social-icon { opacity: 1; }
 
-.link-category { font-size: 8px; opacity: 0.5; text-transform: uppercase; font-weight: 900; display: block; }
-.link-text { font-size: 1.125rem; font-weight: 900; }
-.link-arrow { font-size: 1.25rem; opacity: 0.2; transition: opacity 0.3s; }
-.social-link:hover .link-arrow { opacity: 1; }
+.is-demon .social-link:hover {
 
-/* 導覽選單 */
+    background:
+        rgba(69, 10, 10, 0.65);
+
+}
+
+
+/* Icon */
+
+.social-icon {
+
+    opacity: 0.7;
+
+    transition:
+        opacity 0.3s ease;
+
+}
+
+
+.social-link:hover .social-icon {
+
+    opacity: 1;
+
+}
+
+
+/* Category */
+
+.link-category {
+
+    font-size: 8px;
+
+    opacity: 0.5;
+
+    text-transform: uppercase;
+
+    font-weight: 900;
+
+    display: block;
+
+}
+
+
+/* Link Text */
+
+.link-text {
+
+    font-size: 1rem;
+
+    font-weight: 900;
+
+}
+
+
+/* Arrow */
+
+.link-arrow {
+
+    font-size: 1.25rem;
+
+    opacity: 0.2;
+
+    transition:
+        opacity 0.3s ease;
+
+}
+
+
+.social-link:hover .link-arrow {
+
+    opacity: 1;
+
+}
+
+
+/* =========================================
+   MENU BUTTON
+========================================= */
+
 .menu-trigger {
-  position: fixed;
-  top: 2rem;
-  right: 2rem;
-  z-index: 1000;
-  width: 60px;
-  height: 60px;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 1.2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.4s ease;
+
+    position: fixed;
+
+    top: 2rem;
+
+    right: 2rem;
+
+    z-index: 1000;
+
+    width: 60px;
+    height: 60px;
+
+    background:
+        rgba(255, 255, 255, 0.2);
+
+    backdrop-filter: blur(10px);
+
+    -webkit-backdrop-filter: blur(10px);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.4);
+
+    border-radius: 1.2rem;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.4s ease,
+        background 0.4s ease;
+
 }
-.menu-trigger:hover { transform: scale(1.1) rotate(90deg); }
+
+
+.menu-trigger:hover {
+
+    transform:
+        scale(1.1) rotate(90deg);
+
+}
+
+
+/* =========================================
+   NAVIGATION PORTAL
+========================================= */
 
 .portal {
-  position: fixed;
-  inset: 0;
-  z-index: 2000;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(40px);
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.5s ease;
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 2000;
+
+    background:
+        rgba(0, 0, 0, 0.85);
+
+    backdrop-filter: blur(40px);
+
+    -webkit-backdrop-filter: blur(40px);
+
+    display: none;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    opacity: 0;
+
+    transition:
+        opacity 0.5s ease;
+
 }
 
-.portal.active { display: flex; opacity: 1; }
+
+.portal.active {
+
+    display: flex;
+
+    opacity: 1;
+
+}
+
+
+.nav-links {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+}
+
+
+/* Navigation Items */
 
 .nav-item {
-  font-size: 4rem;
-  font-weight: 900;
-  color: white;
-  text-decoration: none;
-  margin: 1.5rem 0;
-  letter-spacing: 0.5rem;
-  transition: all 0.4s ease;
-  opacity: 0;
-  transform: translateY(30px);
+
+    font-size: 4rem;
+
+    font-weight: 900;
+
+    color: white;
+
+    text-decoration: none;
+
+    margin: 1.5rem 0;
+
+    letter-spacing: 0.5rem;
+
+    transition:
+        color 0.4s ease,
+        transform 0.4s ease,
+        letter-spacing 0.4s ease,
+        opacity 0.4s ease;
+
+    opacity: 0;
+
+    transform: translateY(30px);
+
 }
 
-.portal.active .nav-item { opacity: 1; transform: translateY(0); }
-.nav-item.disabled { opacity: 0.2; cursor: not-allowed; pointer-events: none; }
 
-.nav-item:hover { color: var(--demon-theme); transform: scale(1.1); letter-spacing: 1rem; }
-.nav-label { font-size: 0.75rem; display: block; opacity: 0.4; margin-bottom: 0.5rem; }
-.close-portal { position: absolute; top: 2rem; right: 2rem; font-size: 2rem; color: white; cursor: pointer; opacity: 0.5; }
+.portal.active .nav-item {
+
+    opacity: 1;
+
+    transform: translateY(0);
+
+}
+
+
+.nav-item.disabled {
+
+    opacity: 0.2;
+
+    cursor: not-allowed;
+
+    pointer-events: none;
+
+}
+
+
+.nav-item:hover {
+
+    color: var(--demon-theme);
+
+    transform: scale(1.1);
+
+    letter-spacing: 1rem;
+
+}
+
+
+.nav-label {
+
+    font-size: 0.75rem;
+
+    display: block;
+
+    opacity: 0.4;
+
+    margin-bottom: 0.5rem;
+
+}
+
+
+/* Close Button */
+
+.close-portal {
+
+    position: absolute;
+
+    top: 2rem;
+
+    right: 2rem;
+
+    font-size: 2rem;
+
+    color: white;
+
+    cursor: pointer;
+
+    opacity: 0.5;
+
+    background: none;
+
+    border: none;
+
+    transition:
+        opacity 0.3s ease,
+        transform 0.3s ease;
+
+}
+
+
+.close-portal:hover {
+
+    opacity: 1;
+
+    transform: rotate(90deg);
+
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1400px) {
+
+    .info-card-container {
+
+        left: 3%;
+
+    }
+
+    .right-panel {
+
+        right: 3%;
+
+    }
+
+    .info-card-inner {
+
+        width: 310px;
+        height: 420px;
+
+    }
+
+    .card-face {
+
+        padding: 2rem;
+
+    }
+
+    .card-title {
+
+        font-size: 3rem;
+
+    }
+
+}
+
+
+@media (max-height: 800px) {
+
+    .right-panel {
+
+        gap: 0.8rem;
+
+    }
+
+    .character-switch {
+
+        gap: 0.5rem;
+
+    }
+
+    .character-options {
+
+        gap: 0.4rem;
+
+    }
+
+    .character-option {
+
+        min-height: 54px;
+
+        padding: 0.5rem 0.8rem;
+
+    }
+
+    .character-option-icon {
+
+        width: 32px;
+        height: 32px;
+
+    }
+
+    .social-container {
+
+        gap: 0.4rem;
+
+    }
+
+    .social-link {
+
+        padding: 0.45rem 0.9rem;
+
+    }
+
+    .link-text {
+
+        font-size: 0.9rem;
+
+    }
+
+    .info-card-inner {
+
+        height: 400px;
+
+    }
+
+}
+
+
+@media (max-width: 1100px) {
+
+    .info-card-container {
+
+        left: 2%;
+
+    }
+
+    .right-panel {
+
+        right: 2%;
+
+        width: 240px;
+
+    }
+
+    .info-card-inner {
+
+        width: 260px;
+        height: 380px;
+
+    }
+
+    .card-face {
+
+        padding: 1.5rem;
+
+    }
+
+    .card-title {
+
+        font-size: 2.5rem;
+
+    }
+
+}

@@ -1,19 +1,36 @@
 
 /* =========================================
    天雪シイナ Official Website
-   Angel / Demon Live2D Controller
+   Live2D Character Switch Controller
 ========================================= */
-
-/* =========================================
-   1. Live2D 模型路徑
-========================================= */
-
-// 如果新模型檔名不同，只需要修改這一行
-const cubism4Model = "Model/Shiina/Shiina.model3.json";
 
 
 /* =========================================
-   2. 角色資料
+   1. MODEL CONFIG
+========================================= */
+
+// 修改成你的新模型路徑
+const cubism4Model =
+    "Model/Shiina/Shiina.model3.json";
+
+// 轉換 Motion 群組名稱
+const MOTIONS = {
+
+    angel: "ToAngel",
+
+    demon: "ToDemon"
+
+};
+
+// 初始角色
+const INITIAL_MODE = "angel";
+
+// 模型縮放比例
+const MODEL_SCALE = 0.25;
+
+
+/* =========================================
+   2. CHARACTER DATA
 ========================================= */
 
 const config = {
@@ -21,10 +38,13 @@ const config = {
     angel: {
 
         name: "天雪",
+
         birth: "09 / 21",
+
         race: "天使",
 
-        bio: "「願這場冬雪，能洗淨世間所有的哀愁。」",
+        bio:
+            "「願這場冬雪，能洗淨世間所有的哀愁。」",
 
         color: "#0369a1",
 
@@ -35,15 +55,20 @@ const config = {
 
         links: {
 
-            linkYt: "https://www.youtube.com/@AmayukiShiina",
+            linkYt:
+                "https://www.youtube.com/@AmayukiShiina",
 
-            linkX: "https://x.com/Shiina_Amayuk1",
+            linkX:
+                "https://x.com/Shiina_Amayuk1",
 
-            linkTw: "https://www.twitch.tv/amayukishiina",
+            linkTw:
+                "https://www.twitch.tv/amayukishiina",
 
-            linkIg: "https://www.instagram.com/amayuki_shiina/",
+            linkIg:
+                "https://www.instagram.com/amayuki_shiina/",
 
-            linkTk: "https://www.tiktok.com/@amayukishiina"
+            linkTk:
+                "https://www.tiktok.com/@amayukishiina"
 
         }
 
@@ -52,10 +77,13 @@ const config = {
     demon: {
 
         name: "夕納",
+
         birth: "09 / 21",
+
         race: "惡魔",
 
-        bio: "「讓紅色的雪蓋過一切吧，靈魂什麼的...不需要喔。」",
+        bio:
+            "「讓紅色的雪蓋過一切吧，靈魂什麼的...不需要喔。」",
 
         color: "#f87171",
 
@@ -66,15 +94,20 @@ const config = {
 
         links: {
 
-            linkYt: "https://www.youtube.com/@AmayukiShiina",
+            linkYt:
+                "https://www.youtube.com/@AmayukiShiina",
 
-            linkX: "https://x.com/Shiina_Amayuk1",
+            linkX:
+                "https://x.com/Shiina_Amayuk1",
 
-            linkTw: "https://www.twitch.tv/amayukishiina",
+            linkTw:
+                "https://www.twitch.tv/amayukishiina",
 
-            linkIg: "https://www.instagram.com/amayuki_shiina/",
+            linkIg:
+                "https://www.instagram.com/amayuki_shiina/",
 
-            linkTk: "https://www.tiktok.com/@amayukishiina"
+            linkTk:
+                "https://www.tiktok.com/@amayukishiina"
 
         }
 
@@ -84,65 +117,67 @@ const config = {
 
 
 /* =========================================
-   3. 全域狀態
+   3. GLOBAL STATE
 ========================================= */
 
-// 網站初始角色
-let currentMode = "angel";
+let currentMode = INITIAL_MODE;
 
-// 是否正在進行角色轉換
-let isTransforming = false;
-
-// Live2D 是否已完成載入
 let modelReady = false;
 
-// 導覽選單計時器
+let isTransforming = false;
+
 let portalTimer = null;
 
-// 儲存模型供其他功能使用
 window.myModel = null;
+
+window.pixiApp = null;
 
 
 /* =========================================
-   4. 更新網頁主題與內容
+   4. UPDATE WEBSITE THEME
 ========================================= */
 
 function updateMode(mode) {
 
     const data = config[mode];
 
-    if (!data) {
-        console.error("未知角色模式:", mode);
-        return;
-    }
-
-    const isDemon = mode === "demon";
+    if (!data) return;
 
 
-    /* ---------- 網站主題 ---------- */
+    /* ---------- Stage ---------- */
 
-    const stage = document.getElementById("mainStage");
-
-    const menuBtn = document.getElementById("menuBtn");
-
-    const connectTitle = document.getElementById("connectTitle");
-
+    const stage =
+        document.getElementById("mainStage");
 
     if (stage) {
 
-        stage.classList.toggle("is-demon", isDemon);
+        stage.classList.toggle(
+            "is-demon",
+            mode === "demon"
+        );
 
     }
 
+
+    /* ---------- Menu Button ---------- */
+
+    const menuBtn =
+        document.getElementById("menuBtn");
 
     if (menuBtn) {
 
         menuBtn.style.color = data.color;
 
-        menuBtn.style.borderColor = `${data.color}66`;
+        menuBtn.style.borderColor =
+            `${data.color}66`;
 
     }
 
+
+    /* ---------- Social Title ---------- */
+
+    const connectTitle =
+        document.getElementById("connectTitle");
 
     if (connectTitle) {
 
@@ -151,9 +186,9 @@ function updateMode(mode) {
     }
 
 
-    /* ---------- 角色文字 ---------- */
+    /* ---------- Content ---------- */
 
-    const updateMap = {
+    const content = {
 
         bgTitle: data.name,
 
@@ -172,37 +207,44 @@ function updateMode(mode) {
     };
 
 
-    Object.entries(updateMap).forEach(([id, value]) => {
+    Object.entries(content).forEach(
+        ([id, value]) => {
 
-        const element = document.getElementById(id);
+            const element =
+                document.getElementById(id);
 
-        if (!element) return;
+            if (!element) return;
 
-        element.textContent = value;
+            element.textContent = value;
 
-    });
-
-
-    /* ---------- 社群連結 ---------- */
-
-    Object.entries(data.links).forEach(([id, url]) => {
-
-        const element = document.getElementById(id);
-
-        if (!element) return;
-
-        element.href = url;
-
-        element.target = "_blank";
-
-        element.rel = "noopener noreferrer";
-
-        element.style.color = data.color;
-
-    });
+        }
+    );
 
 
-    /* ---------- 更新右側角色卡片 ---------- */
+    /* ---------- Social Links ---------- */
+
+    Object.entries(data.links).forEach(
+        ([id, url]) => {
+
+            const element =
+                document.getElementById(id);
+
+            if (!element) return;
+
+            element.href = url;
+
+            element.target = "_blank";
+
+            element.rel =
+                "noopener noreferrer";
+
+            element.style.color = data.color;
+
+        }
+    );
+
+
+    /* ---------- Character Cards ---------- */
 
     updateCharacterCards(mode);
 
@@ -210,38 +252,32 @@ function updateMode(mode) {
 
 
 /* =========================================
-   5. 更新角色卡片狀態
+   5. CHARACTER CARD UI
 ========================================= */
 
 function updateCharacterCards(mode) {
 
-    const cards = document.querySelectorAll(
-        "[data-mode]"
-    );
+    const cards =
+        document.querySelectorAll(
+            ".character-option[data-mode]"
+        );
 
 
     cards.forEach(card => {
 
-        const isSelected =
+        const selected =
             card.dataset.mode === mode;
 
 
         card.classList.toggle(
             "selected",
-            isSelected
+            selected
         );
 
 
-        card.classList.toggle(
-            "active",
-            isSelected
-        );
-
-
-        // 無障礙選取狀態
         card.setAttribute(
             "aria-pressed",
-            String(isSelected)
+            String(selected)
         );
 
     });
@@ -250,100 +286,94 @@ function updateCharacterCards(mode) {
 
 
 /* =========================================
-   6. 鎖定 / 解鎖角色卡片
+   6. LOCK CHARACTER CARDS
 ========================================= */
 
-function setCharacterCardsLocked(locked) {
+function lockCharacterCards(locked) {
 
-    const cards = document.querySelectorAll(
-        "[data-mode]"
-    );
+    const cards =
+        document.querySelectorAll(
+            ".character-option[data-mode]"
+        );
 
 
     cards.forEach(card => {
+
+        card.disabled = locked;
 
         card.classList.toggle(
             "is-transforming",
             locked
         );
 
-
-        // 如果是 button，直接禁止點擊
-        if (card instanceof HTMLButtonElement) {
-
-            card.disabled = locked;
-
-        }
-
     });
 
 }
 
 
-/* =========================================
-   7. Live2D 角色轉換
-========================================= */
-
-/**
- * angel -> demon
- * White to Black.motion3.json
- *
- * demon -> angel
- * Black to White.motion3.json
- */
 
 async function switchCharacter(targetMode) {
 
-    // 不存在的角色
+    // 檢查角色是否存在
     if (!config[targetMode]) return;
 
-    // 模型還沒載入
+    // 防止重複切換
+    if (isTransforming) return;
+
+    // 已經是目前角色
+    if (targetMode === currentMode) return;
+
+
+    /* =====================================
+       1. 立即切換網站背景及內容
+    ===================================== */
+
+    currentMode = targetMode;
+
+    updateMode(targetMode);
+
+    console.log("網站主題已切換:", targetMode);
+
+
+    /* =====================================
+       2. 檢查 Live2D
+    ===================================== */
+
     if (!modelReady || !window.myModel) {
 
         console.warn(
-            "Live2D 尚未載入完成"
+            "Live2D 尚未載入，網站主題已正常切換"
         );
 
         return;
 
     }
-
-    // 動畫進行中不可再次切換
-    if (isTransforming) return;
-
-    // 已經是當前角色，不需要切換
-    if (currentMode === targetMode) return;
 
 
     const model = window.myModel;
 
-    const motionManager =
+    const manager =
         model.internalModel.motionManager;
 
-
-    /* ---------- 決定轉換動畫 ---------- */
-
     const motionGroup =
-        targetMode === "demon"
-            ? "ToDemon"
-            : "ToAngel";
+        MOTIONS[targetMode];
 
 
-    /* ---------- 檢查 Motion 是否存在 ---------- */
+    /* =====================================
+       3. 檢查 Motion
+    ===================================== */
 
-    const motionDefinitions =
-        motionManager.definitions ||
-        model.internalModel.settings?.motions;
+    const definitions =
+        manager.definitions || {};
 
 
     if (
-        !motionDefinitions ||
-        !motionDefinitions[motionGroup] ||
-        motionDefinitions[motionGroup].length === 0
+        !definitions[motionGroup] ||
+        definitions[motionGroup].length === 0
     ) {
 
-        console.error(
-            `找不到 Motion 群組：${motionGroup}`
+        console.warn(
+            `找不到 ${motionGroup}，但網站主題已切換`
         );
 
         return;
@@ -351,95 +381,77 @@ async function switchCharacter(targetMode) {
     }
 
 
-    /* ---------- 開始轉換 ---------- */
+    /* =====================================
+       4. 播放變身動畫
+    ===================================== */
 
     isTransforming = true;
 
-    setCharacterCardsLocked(true);
+    lockCharacterCards(true);
 
+    let timeoutId = null;
 
-    console.log(
-        `角色轉換開始：${currentMode} -> ${targetMode}`
-    );
+    let completed = false;
 
-
-    let watchdog = null;
-
-    let finished = false;
-
-
-    /* ---------- 清理動畫監聽 ---------- */
 
     const cleanup = () => {
 
-        motionManager.off(
+        if (completed) return;
+
+        completed = true;
+
+        manager.off(
             "motionFinish",
             onMotionFinish
         );
 
-        if (watchdog !== null) {
+        if (timeoutId !== null) {
 
-            clearTimeout(watchdog);
+            clearTimeout(timeoutId);
 
-            watchdog = null;
+            timeoutId = null;
 
         }
 
         isTransforming = false;
 
-        setCharacterCardsLocked(false);
+        lockCharacterCards(false);
 
     };
 
 
-    /* ---------- 動畫正常結束 ---------- */
-
-    const completeTransformation = () => {
-
-        if (finished) return;
-
-        finished = true;
+    const onMotionFinish = () => {
 
         cleanup();
 
-
-        // 動畫完成後，才正式更新角色
-        currentMode = targetMode;
-
-        updateMode(targetMode);
-
-
         console.log(
-            `角色轉換完成：${currentMode}`
+            "Live2D 變身動畫播放完成"
         );
-
-    };
-
-
-    /* ---------- 動畫結束事件 ---------- */
-
-    const onMotionFinish = (group, index) => {
-
-        if (group !== motionGroup) return;
-
-        if (index !== 0) return;
-
-        completeTransformation();
 
     };
 
 
     try {
 
-        // 先註冊動畫結束事件
-        motionManager.on(
+        manager.on(
             "motionFinish",
             onMotionFinish
         );
 
 
-        // FORCE Priority = 3
-        // 讓轉換動畫可以覆蓋一般待機動畫
+        // 防止 Motion 沒有結束事件時永久鎖定
+        timeoutId = setTimeout(() => {
+
+            console.warn(
+                "Motion 等待逾時，解除卡片鎖定"
+            );
+
+            cleanup();
+
+        }, 20000);
+
+
+        // 播放變身動畫
         const started = await model.motion(
             motionGroup,
             0,
@@ -447,51 +459,24 @@ async function switchCharacter(targetMode) {
         );
 
 
-        /* ---------- 動畫啟動失敗 ---------- */
-
         if (!started) {
 
-            throw new Error(
-                `Motion 無法啟動：${motionGroup}`
+            console.warn(
+                `Motion 無法播放: ${motionGroup}`
             );
 
-        }
-
-
-        // 正常情況下由 motionFinish 結束轉換。
-        // 20 秒內仍未結束時解除鎖定，避免卡片永久失效。
-        if (!finished) {
-
-            watchdog = setTimeout(() => {
-
-                if (finished) return;
-
-                finished = true;
-
-                cleanup();
-
-                console.error(
-                    `Motion 未正常結束：${motionGroup}`
-                );
-
-            }, 20000);
+            cleanup();
 
         }
 
     } catch (error) {
 
         console.error(
-            "Live2D 角色轉換失敗:",
+            "Live2D 動畫錯誤:",
             error
         );
 
-        if (!finished) {
-
-            finished = true;
-
-            cleanup();
-
-        }
+        cleanup();
 
     }
 
@@ -499,81 +484,30 @@ async function switchCharacter(targetMode) {
 
 
 /* =========================================
-   8. 提供給 HTML onclick 使用
-========================================= */
-
-// 即使原本 HTML 是用 onclick 呼叫，
-// 也能使用以下公開函式。
-
-window.switchCharacter = switchCharacter;
-
-
-/* =========================================
-   9. 初始化右側角色卡片
+   8. CHARACTER CARD EVENTS
 ========================================= */
 
 function initCharacterCards() {
 
-    const cards = document.querySelectorAll(
-        "[data-mode]"
-    );
+    const cards =
+        document.querySelectorAll(
+            ".character-option[data-mode]"
+        );
 
 
     cards.forEach(card => {
 
-        const mode = card.dataset.mode;
+        card.addEventListener(
+            "click",
+            () => {
 
+                const mode =
+                    card.dataset.mode;
 
-        if (!config[mode]) return;
+                switchCharacter(mode);
 
-
-        // 避免重複綁定
-        if (card.dataset.bound === "true") return;
-
-        card.dataset.bound = "true";
-
-
-        // 卡片點擊
-        card.addEventListener("click", () => {
-
-            switchCharacter(mode);
-
-        });
-
-
-        // 非 button 的卡片也可以使用鍵盤操作
-        if (!(card instanceof HTMLButtonElement)) {
-
-            card.setAttribute(
-                "role",
-                "button"
-            );
-
-            card.setAttribute(
-                "tabindex",
-                "0"
-            );
-
-
-            card.addEventListener(
-                "keydown",
-                event => {
-
-                    if (
-                        event.key === "Enter" ||
-                        event.key === " "
-                    ) {
-
-                        event.preventDefault();
-
-                        switchCharacter(mode);
-
-                    }
-
-                }
-            );
-
-        }
+            }
+        );
 
     });
 
@@ -584,20 +518,22 @@ function initCharacterCards() {
 
 
 /* =========================================
-   10. 導覽門戶開關
+   9. NAVIGATION PORTAL
 ========================================= */
 
 function togglePortal(open) {
 
-    const portal = document.getElementById(
-        "nav-portal"
-    );
+    const portal =
+        document.getElementById(
+            "nav-portal"
+        );
 
 
     if (!portal) return;
 
 
-    // 清除上一個關閉計時器
+    /* ---------- Cancel Timer ---------- */
+
     if (portalTimer !== null) {
 
         clearTimeout(portalTimer);
@@ -607,6 +543,8 @@ function togglePortal(open) {
     }
 
 
+    /* ---------- Open ---------- */
+
     if (open) {
 
         portal.style.display = "flex";
@@ -614,13 +552,22 @@ function togglePortal(open) {
 
         requestAnimationFrame(() => {
 
-            portal.classList.add("active");
+            portal.classList.add(
+                "active"
+            );
 
         });
 
-    } else {
+    }
 
-        portal.classList.remove("active");
+
+    /* ---------- Close ---------- */
+
+    else {
+
+        portal.classList.remove(
+            "active"
+        );
 
 
         portalTimer = setTimeout(() => {
@@ -636,25 +583,22 @@ function togglePortal(open) {
 }
 
 
-// 允許原本 HTML onclick 使用
-window.togglePortal = togglePortal;
-
-
 /* =========================================
-   11. 初始化 Live2D
+   10. LIVE2D INITIALIZATION
 ========================================= */
 
 async function PixiLive() {
 
-    const canvasElement = document.getElementById(
-        "canvas"
-    );
+    const canvasElement =
+        document.getElementById(
+            "canvas"
+        );
 
 
     if (!canvasElement) {
 
         console.error(
-            "找不到 canvas 元素"
+            "找不到 Live2D Canvas"
         );
 
         return;
@@ -662,74 +606,100 @@ async function PixiLive() {
     }
 
 
-    /* ---------- 建立 PIXI ---------- */
+    /* ---------- Check Libraries ---------- */
 
-    const app = new PIXI.Application({
+    if (
+        typeof PIXI === "undefined" ||
+        !PIXI.live2d
+    ) {
 
-        view: canvasElement,
+        console.error(
+            "PIXI 或 pixi-live2d-display 尚未載入"
+        );
 
-        autoStart: true,
+        return;
 
-        resizeTo: window,
-
-        transparent: true,
-
-        backgroundAlpha: 0,
-
-        antialias: true
-
-    });
+    }
 
 
-    // 保留 PIXI instance
+    /* ---------- PIXI Application ---------- */
+
+    const app =
+        new PIXI.Application({
+
+            view: canvasElement,
+
+            autoStart: true,
+
+            resizeTo: window,
+
+            transparent: true,
+
+            backgroundAlpha: 0,
+
+            antialias: true
+
+        });
+
+
     window.pixiApp = app;
 
 
     try {
 
-        /* ---------- 載入 Live2D ---------- */
+        /* ---------- Load Model ---------- */
 
-        const model4 =
+        const model =
             await PIXI.live2d.Live2DModel.from(
                 cubism4Model,
                 {
-                    autoInteract: false
+
+                    autoInteract: false,
+
+                    autoUpdate: true,
+
+                    motionPreload: "ALL"
+
                 }
             );
 
 
-        window.myModel = model4;
+        window.myModel = model;
 
 
-        /* ---------- 加入舞台 ---------- */
+        /* ---------- Add Model ---------- */
 
-        app.stage.addChild(model4);
-
-
-        /* ---------- 關閉滑鼠自動互動 ---------- */
-
-        model4.autoInteract = false;
+        app.stage.addChild(model);
 
 
-        // 移除模型內建的自動互動監聽
-        // 不再使用滑鼠追蹤或模型點擊來切換角色
+        /* ---------- Disable Mouse Interaction ---------- */
+
+        model.autoInteract = false;
 
 
-        /* ---------- 基礎設定 ---------- */
+        /* ---------- Model Scale ---------- */
 
-        model4.scale.set(0.25);
+        model.scale.set(
+            MODEL_SCALE
+        );
 
-        model4.anchor.set(0.5, 0.5);
+
+        /* ---------- Anchor ---------- */
+
+        model.anchor.set(
+            0.5,
+            0.5
+        );
 
 
-        /* ---------- 模型位置 ---------- */
+        /* ---------- Position ---------- */
 
         const updatePosition = () => {
 
-            model4.x =
+            model.x =
                 app.screen.width * 0.5;
 
-            model4.y =
+            model.y =
                 app.screen.height * 0.5;
 
         };
@@ -744,26 +714,14 @@ async function PixiLive() {
         );
 
 
-        /* ---------- 模型準備完成 ---------- */
+        /* ---------- Motion Manager ---------- */
 
-        modelReady = true;
-
-
-        console.log(
-            "Live2D 模型載入完成"
-        );
-
-
-        /* ---------- 檢查轉換 Motion ---------- */
-
-        const motionManager =
-            model4.internalModel.motionManager;
+        const manager =
+            model.internalModel.motionManager;
 
 
         const motions =
-            motionManager.definitions ||
-            model4.internalModel.settings?.motions ||
-            {};
+            manager.definitions || {};
 
 
         console.log(
@@ -771,6 +729,8 @@ async function PixiLive() {
             Object.keys(motions)
         );
 
+
+        /* ---------- Motion Check ---------- */
 
         if (!motions.ToAngel) {
 
@@ -790,16 +750,22 @@ async function PixiLive() {
         }
 
 
-        // 初始角色為天雪。
-        // 假設模型本身的初始外觀已經是白色天雪。
-        // 不主動播放轉換動畫，避免進站時自動變身。
+        /* ---------- Model Ready ---------- */
+
+        modelReady = true;
+
+
+        console.log(
+            "Live2D 模型載入完成"
+        );
+
 
     } catch (error) {
 
         modelReady = false;
 
         console.error(
-            "Live2D 載入錯誤:",
+            "Live2D 模型載入失敗:",
             error
         );
 
@@ -809,38 +775,55 @@ async function PixiLive() {
 
 
 /* =========================================
-   12. 頁面初始化
+   11. INITIALIZE WEBSITE
 ========================================= */
 
 function initWebsite() {
 
-    /* ---------- 初始化天雪模式 ---------- */
+    /* ---------- Initial Theme ---------- */
 
-    currentMode = "angel";
+    currentMode = INITIAL_MODE;
 
     updateMode(currentMode);
 
 
-    /* ---------- 初始化角色卡片 ---------- */
+    /* ---------- Character Cards ---------- */
 
     initCharacterCards();
 
 
-    /* ---------- 載入 Live2D ---------- */
+    /* ---------- Live2D ---------- */
 
     PixiLive();
 
 }
 
 
-/* ---------- 等待 DOM 載入 ---------- */
+/* =========================================
+   12. GLOBAL FUNCTIONS
+========================================= */
 
-if (document.readyState === "loading") {
+window.switchCharacter =
+    switchCharacter;
+
+window.togglePortal =
+    togglePortal;
+
+
+/* =========================================
+   13. DOM READY
+========================================= */
+
+if (
+    document.readyState === "loading"
+) {
 
     document.addEventListener(
         "DOMContentLoaded",
         initWebsite,
-        { once: true }
+        {
+            once: true
+        }
     );
 
 } else {

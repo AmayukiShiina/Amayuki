@@ -1,140 +1,427 @@
-    <!DOCTYPE html>
-    <html lang="zh-TW">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>天雪夕納 | Official Website</title>
-            <script src="https://cdn.tailwindcss.com"></script>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-            <link rel="stylesheet" href="css/style.css">
 
-            <script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/gh/dylanNew/live2d/webgl/Live2D/lib/live2d.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/pixi.js@6.5.2/dist/browser/pixi.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display/dist/index.min.js"></script>
-            <script>
-                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                    window.location.href = "mobile.html"; 
-                }
-            </script>
-        </head>
+<!DOCTYPE html>
+<html lang="zh-TW">
 
-        <body>
+<head>
+    <meta charset="UTF-8">
 
-        <div class="stage" id="mainStage">
-        <div class="hover-zone zone-top" onmouseenter="updateMode('angel')"></div>
-        <div class="hover-zone zone-bottom" onmouseenter="updateMode('demon')"></div>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-        <div class="bg-title" id="bgTitle">天雪</div>
+    <title>天雪夕納 | Official Website</title>
 
-        <div class="menu-trigger" id="menuBtn" onclick="togglePortal(true)">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Live2D Cubism -->
+    <script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/gh/dylanNew/live2d/webgl/Live2D/lib/live2d.min.js"></script>
+
+    <!-- PIXI -->
+    <script src="https://cdn.jsdelivr.net/npm/pixi.js@6.5.2/dist/browser/pixi.min.js"></script>
+
+    <!-- PIXI Live2D -->
+    <script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display/dist/index.min.js"></script>
+
+    <!-- Mobile Redirect -->
+    <script>
+        if (
+            /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
+                .test(navigator.userAgent)
+        ) {
+            window.location.href = "mobile.html";
+        }
+    </script>
+
+</head>
+
+<body>
+
+    <main class="stage" id="mainStage">
+
+        <!-- 背景文字 -->
+        <div class="bg-title" id="bgTitle">
+            天雪
+        </div>
+
+
+        <!-- 導覽選單按鈕 -->
+        <button
+            type="button"
+            class="menu-trigger"
+            id="menuBtn"
+            onclick="togglePortal(true)"
+            aria-label="開啟選單"
+        >
             <i class="fa-solid fa-bars-staggered text-2xl"></i>
-        </div>
+        </button>
 
+
+        <!-- 導覽門戶 -->
         <div id="nav-portal" class="portal">
-            <div class="close-portal" onclick="togglePortal(false)">
-            <i class="fa-solid fa-xmark"></i>
-            </div>
+
+            <button
+                type="button"
+                class="close-portal"
+                onclick="togglePortal(false)"
+                aria-label="關閉選單"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
             <nav class="nav-links">
-            <a href="index.html" class="nav-item">
-                <span class="nav-label">GATEWAY</span>主頁
-            </a>
-            <a href="#" class="nav-item disabled">
-                <span class="nav-label">GALLERY</span>記憶碎片
-            </a>
+
+                <a href="index.html" class="nav-item">
+                    <span class="nav-label">GATEWAY</span>
+                    主頁
+                </a>
+
+                <a href="#" class="nav-item disabled">
+                    <span class="nav-label">GALLERY</span>
+                    記憶碎片
+                </a>
+
             </nav>
+
         </div>
 
+
+        <!-- 左側身份卡 -->
         <div class="info-card-container">
+
             <div class="info-card-inner" id="mainCard">
-            <div class="card-face card-front">
-                <h3 class="card-subtitle">IDENTITY / 身份證</h3>
-                <h2 class="card-title" id="nameDisplay">天雪</h2>
-                <p class="card-bio" id="bioText"></p>
-                <div class="mt-auto space-y-5">
-                <div class="info-row">
-                    <span class="info-label">生日</span>
-                    <span class="info-value" id="birthVal"></span>
+
+                <!-- 正面 -->
+                <div class="card-face card-front">
+
+                    <h3 class="card-subtitle">
+                        IDENTITY / 身份證
+                    </h3>
+
+                    <h2 class="card-title" id="nameDisplay">
+                        天雪
+                    </h2>
+
+                    <p class="card-bio" id="bioText"></p>
+
+                    <div class="mt-auto space-y-5">
+
+                        <div class="info-row">
+
+                            <span class="info-label">
+                                生日
+                            </span>
+
+                            <span class="info-value" id="birthVal"></span>
+
+                        </div>
+
+                        <div class="info-row">
+
+                            <span class="info-label">
+                                種族
+                            </span>
+
+                            <span class="info-value" id="raceVal"></span>
+
+                        </div>
+
+                    </div>
+
                 </div>
-                <div class="info-row">
-                    <span class="info-label">種族</span>
-                    <span class="info-value" id="raceVal"></span>
+
+
+                <!-- 背面 -->
+                <div class="card-face card-back">
+
+                    <h3 class="card-subtitle">
+                        BIOGRAPHY
+                    </h3>
+
+                    <h2
+                        class="text-4xl font-black mb-6"
+                        id="aboutTitle"
+                    ></h2>
+
+                    <div
+                        class="text-sm space-y-5 leading-relaxed font-medium"
+                        id="aboutContent"
+                    ></div>
+
                 </div>
-                </div>
+
             </div>
-            <div class="card-face card-back">
-                <h3 class="card-subtitle">BIOGRAPHY</h3>
-                <h2 class="text-4xl font-black mb-6" id="aboutTitle"></h2>
-                <div class="text-sm space-y-5 leading-relaxed font-medium" id="aboutContent"></div>
-            </div>
-            </div>
+
         </div>
 
+
+        <!-- 中央 Live2D -->
         <div class="model-wrap">
-            <canvas id=canvas></canvas>
+
+            <canvas id="canvas"></canvas>
+
         </div>
 
-        <div class="social-container">
-            <h3 class="social-header" id="connectTitle">數據連接</h3>
-            
-            <a href="#" class="social-link group" id="linkYt">
-            <div class="flex items-center gap-4">
-                <i class="fab fa-youtube text-2xl social-icon"></i>
-                <div>
-                <span class="link-category">YouTube</span>
-                <span class="link-text">直播現場</span>
-                </div>
-            </div>
-            <span class="link-arrow">↗</span>
-            </a>
 
-            <a href="#" class="social-link group" id="linkX">
-            <div class="flex items-center gap-4">
-                <i class="fab fa-x-twitter text-2xl social-icon"></i>
-                <div>
-                <span class="link-category">Twitter / X</span>
-                <span class="link-text">日常發布</span>
-                </div>
-            </div>
-            <span class="link-arrow">↗</span>
-            </a>
+        <!-- 右側 UI -->
+        <aside class="right-panel">
 
-            <a href="#" class="social-link group" id="linkTw">
-            <div class="flex items-center gap-4">
-                <i class="fab fa-twitch text-2xl social-icon"></i>
-                <div>
-                <span class="link-category">Twitch</span>
-                <span class="link-text">即時互動</span>
-                </div>
-            </div>
-            <span class="link-arrow">↗</span>
-            </a>
+            <!-- 角色切換 -->
+            <section class="character-switch">
 
-            <a href="#" class="social-link group" id="linkIg">
-            <div class="flex items-center gap-4">
-                <i class="fab fa-instagram text-2xl social-icon"></i>
-                <div>
-                <span class="link-category">Instagram</span>
-                <span class="link-text">生活碎片</span>
-                </div>
-            </div>
-            <span class="link-arrow">↗</span>
-            </a>
+                <div class="switch-heading">
 
-            <a href="#" class="social-link group" id="linkTk">
-            <div class="flex items-center gap-4">
-                <i class="fab fa-tiktok text-2xl social-icon"></i>
-                <div>
-                <span class="link-category">TikTok</span>
-                <span class="link-text">短影剪輯</span>
-                </div>
-            </div>
-            <span class="link-arrow">↗</span>
-            </a>
-            
-            </div>
-        </div>
+                    <span class="switch-heading-line"></span>
 
-            <script src="js/main.js"></script>
-        </body>
-    </html>
+                    <span class="switch-heading-text">
+                        SELECT IDENTITY
+                    </span>
+
+                </div>
+
+
+                <div class="character-options">
+
+                    <!-- 天雪 -->
+                    <button
+                        type="button"
+                        class="character-option selected"
+                        data-mode="angel"
+                        aria-pressed="true"
+                    >
+
+                        <span class="character-option-icon angel-icon">
+
+                            <i class="fa-solid fa-snowflake"></i>
+
+                        </span>
+
+                        <span class="character-option-content">
+
+                            <span class="character-option-subtitle">
+                                ANGEL / 天使
+                            </span>
+
+                            <span class="character-option-name">
+                                天雪
+                            </span>
+
+                        </span>
+
+                        <span class="character-option-arrow">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </span>
+
+                    </button>
+
+
+                    <!-- 夕納 -->
+                    <button
+                        type="button"
+                        class="character-option"
+                        data-mode="demon"
+                        aria-pressed="false"
+                    >
+
+                        <span class="character-option-icon demon-icon">
+
+                            <i class="fa-solid fa-moon"></i>
+
+                        </span>
+
+                        <span class="character-option-content">
+
+                            <span class="character-option-subtitle">
+                                DEMON / 惡魔
+                            </span>
+
+                            <span class="character-option-name">
+                                夕納
+                            </span>
+
+                        </span>
+
+                        <span class="character-option-arrow">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- 社群連結 -->
+            <section class="social-container">
+
+                <h3 class="social-header" id="connectTitle">
+                    數據連接
+                </h3>
+
+
+                <!-- YouTube -->
+                <a
+                    href="#"
+                    class="social-link group"
+                    id="linkYt"
+                >
+
+                    <div class="flex items-center gap-4">
+
+                        <i class="fab fa-youtube text-2xl social-icon"></i>
+
+                        <div>
+
+                            <span class="link-category">
+                                YouTube
+                            </span>
+
+                            <span class="link-text">
+                                直播現場
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <span class="link-arrow">↗</span>
+
+                </a>
+
+
+                <!-- X -->
+                <a
+                    href="#"
+                    class="social-link group"
+                    id="linkX"
+                >
+
+                    <div class="flex items-center gap-4">
+
+                        <i class="fab fa-x-twitter text-2xl social-icon"></i>
+
+                        <div>
+
+                            <span class="link-category">
+                                Twitter / X
+                            </span>
+
+                            <span class="link-text">
+                                日常發布
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <span class="link-arrow">↗</span>
+
+                </a>
+
+
+                <!-- Twitch -->
+                <a
+                    href="#"
+                    class="social-link group"
+                    id="linkTw"
+                >
+
+                    <div class="flex items-center gap-4">
+
+                        <i class="fab fa-twitch text-2xl social-icon"></i>
+
+                        <div>
+
+                            <span class="link-category">
+                                Twitch
+                            </span>
+
+                            <span class="link-text">
+                                即時互動
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <span class="link-arrow">↗</span>
+
+                </a>
+
+
+                <!-- Instagram -->
+                <a
+                    href="#"
+                    class="social-link group"
+                    id="linkIg"
+                >
+
+                    <div class="flex items-center gap-4">
+
+                        <i class="fab fa-instagram text-2xl social-icon"></i>
+
+                        <div>
+
+                            <span class="link-category">
+                                Instagram
+                            </span>
+
+                            <span class="link-text">
+                                生活碎片
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <span class="link-arrow">↗</span>
+
+                </a>
+
+
+                <!-- TikTok -->
+                <a
+                    href="#"
+                    class="social-link group"
+                    id="linkTk"
+                >
+
+                    <div class="flex items-center gap-4">
+
+                        <i class="fab fa-tiktok text-2xl social-icon"></i>
+
+                        <div>
+
+                            <span class="link-category">
+                                TikTok
+                            </span>
+
+                            <span class="link-text">
+                                短影剪輯
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <span class="link-arrow">↗</span>
+
+                </a>
+
+            </section>
+
+        </aside>
+
+    </main>
+
+    <script src="js/main.js"></script>
+
+</body>
+
+</html>
